@@ -8,8 +8,8 @@ import model.enums.GameState;
  * @author WrexBG
  */
 public class Game implements GameModel {
-    // the amount of mines in the game
-    int amountOfMines;
+    // the difficulty of the game
+    Difficulty difficulty;
     // weather or not the game has finished
     boolean hasFinished;
     // the grid of the game
@@ -19,25 +19,23 @@ public class Game implements GameModel {
 
     /**
      * Constructor for the game object
-     * @param amountOfMines The amount of mines
-     * @param width The width of the grid
-     * @param height The height of the grid
+     * @param difficulty The difficulty of the game
      */
-    public Game(int amountOfMines, int width, int height) {
-        setAmountOfMines(amountOfMines);
+    public Game(Difficulty difficulty) {
+        setDifficulty(difficulty);
         setFinished(false);
         setState(GameState.IDLE);
-        setGrid(new GameGrid(width, height));
+        setGrid(new GameGrid(difficulty.getColumns(), difficulty.getRows()));
     }
 
     // Methods inherited from the {@link GameModel} interface
     @Override
-    public void setAmountOfMines(int amount) {
-        this.amountOfMines = amount;
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
     }
     @Override
-    public int getAmountOfMines() {
-        return this.amountOfMines;
+    public Difficulty getDifficulty() {
+        return this.difficulty;
     }
     @Override
     public void setFinished(boolean hasFinished) {

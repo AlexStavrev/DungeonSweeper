@@ -1,6 +1,7 @@
 package controller;
 
 import model.Cell;
+import model.Difficulty;
 import model.Game;
 import model.GameGrid;
 import model.enums.GameState;
@@ -30,18 +31,16 @@ public class GameController {
      */
     public GameController(Game game) {
         setGame(game);
-        amountOfTilesLeft = (game.getGrid().getGridX() * game.getGrid().getGridY()) - game.getAmountOfMines();
+        amountOfTilesLeft = (game.getGrid().getGridX() * game.getGrid().getGridY()) - game.getDifficulty().getAmountOfMines();
         cellController = new CellController();
     }
 
     /**
      * Constructor that will create the {@link model.Game} param itself
-     * @param amountOfMines the amount of mines in the game
-     * @param width the width of the game's grid
-     * @param height the height of the game's grid
+     * @param difficulty the difficulty of the game
      */
-    public GameController(int amountOfMines, int width, int height) {
-        this(new Game(amountOfMines, width, height));
+    public GameController(Difficulty difficulty) {
+        this(new Game(difficulty));
     }
 
     /**
@@ -126,7 +125,7 @@ public class GameController {
     public void placeBombs() {
         int xMax = game.getGrid().getGridX();
         int yMax = game.getGrid().getGridY();
-        int amountOfMines = game.getAmountOfMines();
+        int amountOfMines = game.getDifficulty().getAmountOfMines();
 
         Random random = new Random();
         for(int index = 0; index < amountOfMines; index++) {
@@ -141,7 +140,7 @@ public class GameController {
     }
 
     /**
-     * A condition to check if the providex x and y coords are in a corner of the grid
+     * A condition to check if the provided x and y coords are in a corner of the grid
      * @param x x-coord
      * @param y y-coord
      * @return true if the given coordinates are in a corner

@@ -2,6 +2,7 @@ package ui;
 
 import controller.GameController;
 import model.Cell;
+import model.Difficulty;
 import model.GameGrid;
 import model.enums.GameState;
 import model.enums.Value;
@@ -18,13 +19,8 @@ import java.net.URL;
  * @author WrexBG
  */
 public class GameForm extends JFrame {
-    // The width of the game
-    int width;
-    // The height of the game
-    int height;
-    // The amount of mines in the game
-    int amountOfMines;
-    // The game controller responsible for this game
+    // The difficulty of the game
+    Difficulty difficulty;
     GameController gameController;
     // The button for the image in the top center
     JButton imageButton;
@@ -42,7 +38,7 @@ public class GameForm extends JFrame {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                JFrame mainFrame = new GameForm(10, 9, 9);
+                JFrame mainFrame = new GameForm(new Difficulty("Easy",10, 9, 9));
                 mainFrame.setResizable(false);
                 mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 mainFrame.setTitle("Dungeon Sweeper");
@@ -61,15 +57,11 @@ public class GameForm extends JFrame {
     }
 
     /**
-     * Standard constructor for this calss
-     * @param amountOfMines the amount of mines
-     * @param width the game's width
-     * @param height the game's height
+     * Standard constructor for this class
+     * @param difficulty the amount of mines
      */
-    public GameForm(int amountOfMines, int width, int height) {
-        this.width = width;
-        this.height = height;
-        this.amountOfMines = amountOfMines;
+    public GameForm(Difficulty difficulty) {
+        this.difficulty = difficulty;
         initComponents();
     }
 
@@ -77,7 +69,7 @@ public class GameForm extends JFrame {
      * A method to initialize the gui components and other elements
      */
     private void initComponents() {
-        gameController = new GameController(amountOfMines, width, height) {
+        gameController = new GameController(difficulty) {
             @Override
             public int getTotalSeconds() {
                 return timer.getTotalSeconds();
@@ -143,11 +135,11 @@ public class GameForm extends JFrame {
         fl_gamePanel.setHgap(0);
         fl_gamePanel.setVgap(0);
         gamePanel.setLayout(fl_gamePanel);
-        gamePanel.setPreferredSize(new Dimension(Utils.TILE_SIZE * width, Utils.TILE_SIZE * height));
+        gamePanel.setPreferredSize(new Dimension(Utils.TILE_SIZE * difficulty.getColumns(), Utils.TILE_SIZE * difficulty.getRows()));
         gameController.startGame();
         GameGrid grid = gameController.getGame().getGrid();
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
+        for (int y = 0; y < difficulty.getRows(); y++) {
+            for (int x = 0; x < difficulty.getColumns(); x++) {
                 Cell cell = grid.getCellAt(x, y);
                 UICell button = new UICell(cell, Utils.getInstance().getIconForValue(cell.getValue()), gameController);
                 formatCellButtonAt(button);
