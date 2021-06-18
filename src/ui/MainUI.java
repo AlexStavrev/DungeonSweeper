@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ExperimentalUI extends JFrame {
+public class MainUI extends JFrame {
 
     // The default dark color used for e.g. on the form's background
     private final Color defaultColor;
@@ -29,6 +29,13 @@ public class ExperimentalUI extends JFrame {
     // A UI element
     JLabel difficultyLabel;
 
+    // The main panel
+    JPanel contentPane;
+    // Cards layout so the UI can switch between pages
+    private CardLayout pages;
+    // The page where the game will be played
+    private GameUI gamePanel;
+
     /**
      * The main method for this frame
      * @param args default
@@ -36,7 +43,7 @@ public class ExperimentalUI extends JFrame {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                JFrame mainFrame = new ExperimentalUI();
+                JFrame mainFrame = new MainUI();
                 mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 mainFrame.setTitle("Dungeon Sweeper");
                 URL url = mainFrame.getClass().getResource("images/icon.png");
@@ -58,12 +65,12 @@ public class ExperimentalUI extends JFrame {
     /**
      * Standard constructor for this class
      */
-    public ExperimentalUI() {
+    public MainUI() {
         difficultyList = new LinkedList<>();
         selectedDifficultyIndex = 0;
         difficultyList.add(new Difficulty("Easy", 10, 9, 9));
-        difficultyList.add(new Difficulty("Normal", 30, 15, 15));
-        difficultyList.add(new Difficulty("Hard", 70, 30, 15));
+        difficultyList.add(new Difficulty("Normal", 30, 15, 10));
+        difficultyList.add(new Difficulty("Hard", 50, 21, 10));
 
         defaultColor = new Color(27, 27, 35);
         buttonBackground = new Color(82, 82, 82);
@@ -76,22 +83,26 @@ public class ExperimentalUI extends JFrame {
      * A method to initialize the gui components and other elements
      */
     private void initComponents() {
-        //======== this ========
-        JPanel contentPane = new JPanel();
-        setContentPane(contentPane);
+        //======== game page ========
+        gamePanel = new GameUI();
+        //======== main page ========
+        JPanel mainPanel = new JPanel();
         GridBagLayout gbl_contentPane = new GridBagLayout();
         gbl_contentPane.columnWidths = new int[]{0, 0,261,0, 0};
         gbl_contentPane.rowHeights = new int[]{60, 0, 0, 0, 0, 60};
         gbl_contentPane.columnWeights = new double[]{0.7, 0.0,0.3,0.0, 0.7};
         gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE, 0.0};
-        contentPane.setLayout(gbl_contentPane);
-        contentPane.setBackground(defaultColor);
+        mainPanel.setLayout(gbl_contentPane);
+        mainPanel.setBackground(defaultColor);
 
         //---- playButton ----
         JButton playButton = new JButton("PLAY");
         formatElement(playButton, buttonBackground);
-        playButton.addActionListener(e -> GameForm.main(null));
-        contentPane.add(playButton, new GridBagConstraints(1, 1, 3, 1, 0.0, 0.0,
+        playButton.addActionListener(e -> {
+            gamePanel.setDifficulty(difficultyList.get(selectedDifficultyIndex));
+            selectPage("gamePanel");
+        });
+        mainPanel.add(playButton, new GridBagConstraints(1, 1, 3, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets(40, 0, 20, 0), 0, 0));
         makeHoverable(playButton, buttonHoverBackground, buttonHoverForeground);
@@ -100,7 +111,7 @@ public class ExperimentalUI extends JFrame {
         JButton leftArrow = new JButton("◀");
         formatElement(leftArrow, buttonBackground);
         leftArrow.addActionListener(e -> selectedDifficultyByIndex(((--selectedDifficultyIndex) >= 0) ? selectedDifficultyIndex : difficultyList.size()-1));
-        contentPane.add(leftArrow, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
+        mainPanel.add(leftArrow, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));
         makeHoverable(leftArrow, buttonHoverBackground, buttonHoverForeground);
@@ -109,7 +120,7 @@ public class ExperimentalUI extends JFrame {
         difficultyLabel = new JLabel("EASY");
         formatElement(difficultyLabel, buttonBackground);
         difficultyLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        contentPane.add(difficultyLabel, new GridBagConstraints(2, 2, 1, 1, 0.0, 0.0,
+        mainPanel.add(difficultyLabel, new GridBagConstraints(2, 2, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));
 
@@ -117,7 +128,7 @@ public class ExperimentalUI extends JFrame {
         JButton rightArrow = new JButton("▶");
         formatElement(rightArrow, buttonBackground);
         rightArrow.addActionListener(e -> selectedDifficultyByIndex((++selectedDifficultyIndex < difficultyList.size()) ? selectedDifficultyIndex : 0));
-        contentPane.add(rightArrow, new GridBagConstraints(3, 2, 1, 1, 0.0, 0.0,
+        mainPanel.add(rightArrow, new GridBagConstraints(3, 2, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));
         makeHoverable(rightArrow, buttonHoverBackground, buttonHoverForeground);
@@ -125,7 +136,7 @@ public class ExperimentalUI extends JFrame {
         //---- creditsButton ----
         JButton creditsButton = new JButton("CREDITS");
         formatElement(creditsButton, buttonBackground);
-        contentPane.add(creditsButton, new GridBagConstraints(1, 3, 3, 1, 0.0, 0.0,
+        mainPanel.add(creditsButton, new GridBagConstraints(1, 3, 3, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));
         makeHoverable(creditsButton, buttonHoverBackground, buttonHoverForeground);
@@ -134,12 +145,29 @@ public class ExperimentalUI extends JFrame {
         JButton exitButton = new JButton("EXIT");
         formatElement(exitButton, new Color(183, 0, 0));
         exitButton.addActionListener(e -> dispose());
-        contentPane.add(exitButton, new GridBagConstraints(1, 4, 3, 1, 0.0, 0.0,
+        mainPanel.add(exitButton, new GridBagConstraints(1, 4, 3, 1, 0.0, 0.0,
                 GridBagConstraints.SOUTH, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));
         makeHoverable(exitButton, new Color(140, 0, 0), buttonHoverForeground);
 
-        setLocationRelativeTo(getOwner());
+        //======== this ========
+        contentPane = new JPanel();
+        pages = new CardLayout(0, 0);
+        contentPane.setLayout(pages);
+        contentPane.add(mainPanel, "mainPanel");
+        contentPane.add(gamePanel, "gamePanel");
+        setContentPane(contentPane);
+    }
+
+    /**
+     * A method to select a page when using the sidebar buttons
+     * @param page name of the page
+     */
+    private void selectPage(String page) {
+        switch (page) {
+            case "mainPanel", "gamePanel" -> pages.show(contentPane, page);
+            default -> throw new IllegalStateException("Unexpected page: " + page);
+        }
     }
 
     /**

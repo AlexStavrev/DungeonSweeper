@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ba2c3fc0-9b2b-4a40-a945-1bb0406f9829" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/ExperimentalUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/ExperimentalUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/ExperimentalUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/MainUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/GameForm.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,20 +36,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
   </component>
-  <component name="RunManager" selected="Application.ExperimentalUI">
-    <configuration name="ExperimentalUI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ui.ExperimentalUI" />
-      <module name="DungeonSweeper" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="ui.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Application.MainUI">
     <configuration name="GameForm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ui.GameForm" />
       <module name="DungeonSweeper" />
@@ -62,20 +50,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
+    <configuration name="MainUI" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ui.MainUI" />
+      <module name="DungeonSweeper" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ui.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.ExperimentalUI" />
+        <item itemvalue="Application.MainUI" />
         <item itemvalue="Application.GameForm" />
       </list>
     </recent_temporary>
@@ -91,7 +81,8 @@
       <workItem from="1623943017425" duration="4031000" />
       <workItem from="1623948007303" duration="1223000" />
       <workItem from="1623961526355" duration="2093000" />
-      <workItem from="1624015530052" duration="6594000" />
+      <workItem from="1624015530052" duration="10571000" />
+      <workItem from="1624030579706" duration="6754000" />
     </task>
     <servers />
   </component>

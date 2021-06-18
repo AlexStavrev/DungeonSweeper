@@ -12,142 +12,136 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URL;
 
-/**
- * A UI Class for the application's main game window
- * @author WrexBG
- */
-public class GameForm extends JFrame {
-    // The difficulty of the game
-    Difficulty difficulty;
-    GameController gameController;
-    // The button for the image in the top center
-    JButton imageButton;
-    // The panel where the cells are shown
-    JPanel gamePanel;
-    // The label showing the score
-    JLabel scoreLabel;
-    // The game timer
-    JTimer timer;
+public class GameUI extends JPanel {
+
+    private Difficulty difficulty;
+
+    private GameController gameController;
+
+    private JLabel scoreLabel;
+    private JTimer timer;
+    private JButton imageButton;
+    private JPanel gamePanel;
 
     /**
-     * The main method for this frame
-     * @param args default
+     * Standard constructor
      */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                JFrame mainFrame = new GameForm(new Difficulty("Easy",10, 9, 9));
-                mainFrame.setResizable(false);
-                mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                mainFrame.setTitle("Dungeon Sweeper");
-                URL url = mainFrame.getClass().getResource("images/icon.png");
-                ImageIcon icon = new ImageIcon(url);
-                mainFrame.setIconImage(icon.getImage());
-                // Remove the system's scale factor on the UI elements
-                System.setProperty("sun.java2d.uiScale", "1.0");
-                // Centres the dialog
-                mainFrame.setLocationRelativeTo(null);
-                mainFrame.setVisible(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
+    public GameUI() {initComponents();}
 
     /**
-     * Standard constructor for this class
+     * Constructor accepting difficulty
      * @param difficulty the amount of mines
      */
-    public GameForm(Difficulty difficulty) {
+    public GameUI(Difficulty difficulty) {
+        this();
+        setDifficulty(difficulty);
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
-        initComponents();
+        initGameBoard();
     }
 
     /**
      * A method to initialize the gui components and other elements
      */
     private void initComponents() {
-        gameController = new GameController(difficulty) {
-            @Override
-            public int getTotalSeconds() {
-                return timer.getTotalSeconds();
-            }
-        };
+        removeAll();
         //======== this ========
-        JPanel contentPane = new JPanel();
-        setContentPane(contentPane);
-        GridBagLayout gbl_contentPane = new GridBagLayout();
-        gbl_contentPane.columnWidths = new int[]{0, 30, 0};
-        gbl_contentPane.rowHeights = new int[]{0, 0};
-        gbl_contentPane.columnWeights = new double[]{1.0, 0.0, 1.0};
-        gbl_contentPane.rowWeights = new double[]{0.0, Double.MIN_VALUE};
-        contentPane.setLayout(gbl_contentPane);
-        contentPane.setBackground(new Color(27, 27, 35));
+        GridBagLayout gbl_gameUI = new GridBagLayout();
+        gbl_gameUI.columnWidths = new int[]{100, 0, 0, 0, 60};
+        gbl_gameUI.rowHeights = new int[]{0, 0, 0};
+        gbl_gameUI.columnWeights = new double[]{0.0, 1.0, 0.0, 1.0, 0.0};
+        gbl_gameUI.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+        setLayout(gbl_gameUI);
+        setBackground(new Color(27, 27, 35));
 
-        //---- timeLabel ----
+        //---- time ----
         timer = new JTimer(5, 0) {
             @Override
-            public void done() {
-                endGame();
-            }
+            public void done() {endGame();}
         };
-        timer.setFont(new Font("Arial", Font.BOLD, 16));
-        timer.setForeground(new Color(170, 0, 30));
+        timer.setFont(new Font("Arial", Font.BOLD, 20));
+        timer.setForeground(Color.WHITE);
         timer.setHorizontalAlignment(SwingConstants.LEFT);
-        contentPane.add(timer, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+        add(timer, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
                 GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
-                new Insets(10, 20, 10, 20), 0, 0));
+                new Insets(15, 20, 0, 0), 0, 0));
         timer.startTimer();
 
+        //---- scoreLabel ----
+        scoreLabel = new JLabel("0");
+        scoreLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        scoreLabel.setForeground(Color.WHITE);
+        add(scoreLabel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+                GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
+                new Insets(0, 20, 5, 0), 0, 0));
+
         //---- imageButton ----
-        imageButton = new JButton(Utils.getInstance().resizedImage("images/alive.jpg", 60, 60));
+        imageButton = new JButton(Utils.getInstance().resizedImage("images/alive.jpg", Utils.TILE_SIZE, Utils.TILE_SIZE));
         imageButton.setBorderPainted(false);
         imageButton.setBorder(BorderFactory.createEmptyBorder());
         imageButton.setContentAreaFilled(false);
+        imageButton.setBackground(new Color(27, 27, 35));
         imageButton.setOpaque(true);
         imageButton.addActionListener(e -> {
             if(gameController.getGame().getState() == GameState.LOST || gameController.getGame().getState() == GameState.WON) {
                 initComponents();
+                initGameBoard();
             }
         });
-        contentPane.add(imageButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+        add(imageButton, new GridBagConstraints(0, 0, 5, 2, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
+                new Insets(15, 0, 5, 0), 0, 0));
+
+        //---- pauseButton ----
+        JButton pauseButton = new JButton("▐ ▌");
+        pauseButton.setPreferredSize(new Dimension(pauseButton.getHeight(), pauseButton.getHeight()));
+        pauseButton.setBorder(BorderFactory.createEmptyBorder());
+        pauseButton.setBackground(new Color(80, 80, 80));
+        pauseButton.setForeground(Color.WHITE);
+        pauseButton.setFont(new Font("Arial",Font.BOLD, 20));
+        pauseButton.setOpaque(true);
+        pauseButton.addActionListener(e -> System.out.println("pause"));
+        add(pauseButton, new GridBagConstraints(4, 0, 1, 2, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets(10, 10, 10, 10), 0, 0));
+    }
+
+    private void initGameBoard() {
+        gameController = new GameController(difficulty) {
+            @Override
+            public int getTotalSeconds() {return timer.getTotalSeconds();}
+        };
+        gamePanel = new JPanel();
+        gamePanel.removeAll();
+        gamePanel.setBackground(new Color(27, 27, 35));
+        add(gamePanel, new GridBagConstraints(0, 2, 5, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets(0, 0, 0, 0), 0, 0));
 
-        //---- scoreLabel ----
-        scoreLabel = new JLabel("0");
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        scoreLabel.setForeground(new Color(170, 0, 30));
-        scoreLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-        contentPane.add(scoreLabel, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
-                GridBagConstraints.EAST, GridBagConstraints.HORIZONTAL,
-                new Insets(10, 20, 10, 20), 0, 0));
+        GridBagLayout gbl_gamePanel = new GridBagLayout();
+        gbl_gamePanel.columnWidths = new int[difficulty.getColumns()];
+        gbl_gamePanel.rowHeights = new int[difficulty.getRows()];
+        gamePanel.setLayout(gbl_gamePanel);
 
-        //---- gamePanel ---- TODO This is temp so change it
-        gamePanel = new JPanel();
-        contentPane.add(gamePanel, new GridBagConstraints(0, 1, 3, 1, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets(10, 10, 10, 10), 0, 0));
-
-        FlowLayout fl_gamePanel = new FlowLayout();
-        fl_gamePanel.setHgap(0);
-        fl_gamePanel.setVgap(0);
-        gamePanel.setLayout(fl_gamePanel);
         gamePanel.setPreferredSize(new Dimension(Utils.TILE_SIZE * difficulty.getColumns(), Utils.TILE_SIZE * difficulty.getRows()));
+        gamePanel.setMaximumSize(new Dimension(Utils.TILE_SIZE * difficulty.getColumns(), Utils.TILE_SIZE * difficulty.getRows()));
         gameController.startGame();
         GameGrid grid = gameController.getGame().getGrid();
+
         for (int y = 0; y < difficulty.getRows(); y++) {
             for (int x = 0; x < difficulty.getColumns(); x++) {
                 Cell cell = grid.getCellAt(x, y);
                 UICell button = new UICell(cell, Utils.getInstance().getIconForValue(cell.getValue()), gameController);
+                button.setBorder(BorderFactory.createEmptyBorder());
+                gamePanel.add(button, new GridBagConstraints(x, y, 1, 1, 0.0, 0.0,
+                        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                        new Insets(0, 0, 0, 0), 0, 0));
                 formatCellButtonAt(button);
-                gamePanel.add(button);
             }
         }
-        pack();
-        setLocationRelativeTo(getOwner());
     }
 
     /**
@@ -192,7 +186,7 @@ public class GameForm extends JFrame {
         if(gameController.getGame().getState() == GameState.LOST) {
             Utils.getInstance().playSound("loose");
         }
-        imageButton.setIcon(Utils.getInstance().resizedImage("images/dead.jpg", 60, 60));
+        imageButton.setIcon(Utils.getInstance().resizedImage("images/dead.jpg", Utils.TILE_SIZE, Utils.TILE_SIZE));
         for (Component cell : gamePanel.getComponents()) {
             if (cell instanceof UICell cellButton) {
                 if (cellButton.getActionListeners().length > 0) {
@@ -211,7 +205,7 @@ public class GameForm extends JFrame {
     private void winGame() {
         endGame();
         Utils.getInstance().playSound("win");
-        imageButton.setIcon(Utils.getInstance().resizedImage("images/won.jpg", 60, 60));
+        imageButton.setIcon(Utils.getInstance().resizedImage("images/won.jpg", Utils.TILE_SIZE, Utils.TILE_SIZE));
     }
 
     /**
