@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ba2c3fc0-9b2b-4a40-a945-1bb0406f9829" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/controller/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/GameController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/GameModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/GameModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/GameForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/GameForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/ExperimentalUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/ExperimentalUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,7 +91,7 @@
       <workItem from="1623943017425" duration="4031000" />
       <workItem from="1623948007303" duration="1223000" />
       <workItem from="1623961526355" duration="2093000" />
-      <workItem from="1624015530052" duration="4637000" />
+      <workItem from="1624015530052" duration="6594000" />
     </task>
     <servers />
   </component>

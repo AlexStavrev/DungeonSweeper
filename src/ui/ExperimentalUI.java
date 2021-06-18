@@ -1,10 +1,14 @@
 package ui;
 
+import model.Difficulty;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ExperimentalUI extends JFrame {
 
@@ -16,6 +20,14 @@ public class ExperimentalUI extends JFrame {
     private final Color buttonHoverBackground;
     // Hover fg color for a button
     private final Color buttonHoverForeground;
+
+    // A list of all the difficulties
+    private List<Difficulty> difficultyList;
+    // An index to keep track of the selected difficulty
+    int selectedDifficultyIndex;
+
+    // A UI element
+    JLabel difficultyLabel;
 
     /**
      * The main method for this frame
@@ -34,6 +46,8 @@ public class ExperimentalUI extends JFrame {
                 System.setProperty("sun.java2d.uiScale", "1.0");
                 // Centres the dialog
                 mainFrame.setLocationRelativeTo(null);
+                mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                mainFrame.setUndecorated(true);
                 mainFrame.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -45,6 +59,12 @@ public class ExperimentalUI extends JFrame {
      * Standard constructor for this class
      */
     public ExperimentalUI() {
+        difficultyList = new LinkedList<>();
+        selectedDifficultyIndex = 0;
+        difficultyList.add(new Difficulty("Easy", 10, 9, 9));
+        difficultyList.add(new Difficulty("Normal", 30, 15, 15));
+        difficultyList.add(new Difficulty("Hard", 70, 30, 15));
+
         defaultColor = new Color(27, 27, 35);
         buttonBackground = new Color(82, 82, 82);
         buttonHoverBackground = new Color(60, 60, 60);
@@ -60,7 +80,7 @@ public class ExperimentalUI extends JFrame {
         JPanel contentPane = new JPanel();
         setContentPane(contentPane);
         GridBagLayout gbl_contentPane = new GridBagLayout();
-        gbl_contentPane.columnWidths = new int[]{0, 0,0,0, 0};
+        gbl_contentPane.columnWidths = new int[]{0, 0,261,0, 0};
         gbl_contentPane.rowHeights = new int[]{60, 0, 0, 0, 0, 60};
         gbl_contentPane.columnWeights = new double[]{0.7, 0.0,0.3,0.0, 0.7};
         gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE, 0.0};
@@ -79,13 +99,14 @@ public class ExperimentalUI extends JFrame {
         //---- leftArrow ----
         JButton leftArrow = new JButton("◀");
         formatElement(leftArrow, buttonBackground);
+        leftArrow.addActionListener(e -> selectedDifficultyByIndex(((--selectedDifficultyIndex) >= 0) ? selectedDifficultyIndex : difficultyList.size()-1));
         contentPane.add(leftArrow, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));
         makeHoverable(leftArrow, buttonHoverBackground, buttonHoverForeground);
 
         //---- difficultyLabel ----
-        JLabel difficultyLabel = new JLabel("EASY");
+        difficultyLabel = new JLabel("EASY");
         formatElement(difficultyLabel, buttonBackground);
         difficultyLabel.setHorizontalAlignment(SwingConstants.CENTER);
         contentPane.add(difficultyLabel, new GridBagConstraints(2, 2, 1, 1, 0.0, 0.0,
@@ -95,6 +116,7 @@ public class ExperimentalUI extends JFrame {
         //---- rightArrow ----
         JButton rightArrow = new JButton("▶");
         formatElement(rightArrow, buttonBackground);
+        rightArrow.addActionListener(e -> selectedDifficultyByIndex((++selectedDifficultyIndex < difficultyList.size()) ? selectedDifficultyIndex : 0));
         contentPane.add(rightArrow, new GridBagConstraints(3, 2, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));
@@ -103,7 +125,6 @@ public class ExperimentalUI extends JFrame {
         //---- creditsButton ----
         JButton creditsButton = new JButton("CREDITS");
         formatElement(creditsButton, buttonBackground);
-        creditsButton.addActionListener(e -> System.out.println("credits"));
         contentPane.add(creditsButton, new GridBagConstraints(1, 3, 3, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));
@@ -120,6 +141,16 @@ public class ExperimentalUI extends JFrame {
 
         setLocationRelativeTo(getOwner());
     }
+
+    /**
+     * A method to set the selected difficulty in the UI label
+     * @param index the index of the difficulty
+     */
+    private void selectedDifficultyByIndex(int index) {
+        selectedDifficultyIndex = index;
+        difficultyLabel.setText(difficultyList.get(index).getName().toUpperCase());
+    }
+
 
     /**
      * A method to format an element
