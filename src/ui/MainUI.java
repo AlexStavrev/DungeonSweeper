@@ -143,7 +143,7 @@ public class MainUI extends JFrame {
         //---- exitButton ----
         JButton exitButton = new JButton("EXIT");
         formatElement(exitButton, new Color(183, 0, 0));
-        exitButton.addActionListener(e -> dispose());
+        exitButton.addActionListener(e -> this.dispose());
         mainPanel.add(exitButton, new GridBagConstraints(1, 4, 3, 1, 0.0, 0.0,
                 GridBagConstraints.SOUTH, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));

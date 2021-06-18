@@ -92,7 +92,7 @@ public class GameUI extends JPanel {
         //---- pauseButton ----
         JButton pauseButton = new JButton("▐ ▌");
         pauseButton.setFocusable(false);
-        pauseButton.setBorder(BorderFactory.createEmptyBorder());
+        pauseButton.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
         pauseButton.setBackground(new Color(80, 80, 80));
         pauseButton.setForeground(Color.WHITE);
         pauseButton.setFont(new Font("Arial",Font.BOLD, 20));
