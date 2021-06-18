@@ -51,6 +51,7 @@ public class JTimer extends JLabel implements JTimerIF {
                 done();
             }
         });
+        timerThread.setDaemon(true);
         timerThread.start();
     }
 

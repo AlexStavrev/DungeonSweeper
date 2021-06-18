@@ -27,7 +27,7 @@ public class GameUI extends JPanel {
     private JPanel gamePanel;
 
     /**
-     * Constructor accepting difficulty
+     * Standard Constructor for the class
      * @param difficulty the amount of mines
      */
     public GameUI(MainUI parent, Difficulty difficulty) {

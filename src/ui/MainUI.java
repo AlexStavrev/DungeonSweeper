@@ -2,6 +2,7 @@ package ui;
 
 import model.Difficulty;
 import model.Game;
+import ui.custom.SplashPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +45,7 @@ public class MainUI extends JFrame {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                JFrame mainFrame = new MainUI();
+                MainUI mainFrame = new MainUI();
                 mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 mainFrame.setTitle("Dungeon Sweeper");
                 URL url = mainFrame.getClass().getResource("images/icon.png");
@@ -57,6 +58,7 @@ public class MainUI extends JFrame {
                 mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 mainFrame.setUndecorated(true);
                 mainFrame.setVisible(true);
+                Utils.getInstance().playSoundOnLoop("music");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -98,7 +100,11 @@ public class MainUI extends JFrame {
         JButton playButton = new JButton("PLAY");
         formatElement(playButton, buttonBackground);
         playButton.addActionListener(e -> {
-            contentPane.add(new GameUI(this, difficultyList.get(selectedDifficultyIndex)), "gamePanel");
+            if(gamePanel != null) {
+                contentPane.remove(gamePanel);
+            }
+            gamePanel = new GameUI(this, difficultyList.get(selectedDifficultyIndex));
+            contentPane.add(gamePanel, "gamePanel");
             selectPage("gamePanel");
         });
         mainPanel.add(playButton, new GridBagConstraints(1, 1, 3, 1, 0.0, 0.0,
@@ -149,10 +155,18 @@ public class MainUI extends JFrame {
                 new Insets(20, 0, 20, 0), 0, 0));
         makeHoverable(exitButton, new Color(140, 0, 0), buttonHoverForeground);
 
+        //======== splash ========
+        SplashPanel splash = new SplashPanel() {
+            @Override
+            public void done() {
+                selectPage("mainPanel");
+            }
+        };
         //======== this ========
         contentPane = new JPanel();
         pages = new CardLayout(0, 0);
         contentPane.setLayout(pages);
+        contentPane.add(splash, "splashPane");
         contentPane.add(mainPanel, "mainPanel");
         setContentPane(contentPane);
     }
@@ -163,7 +177,7 @@ public class MainUI extends JFrame {
      */
     public void selectPage(String page) {
         switch (page) {
-            case "mainPanel", "gamePanel" -> pages.show(contentPane, page);
+            case "mainPanel", "gamePanel", "splashPanel" -> pages.show(contentPane, page);
             default -> throw new IllegalStateException("Unexpected page: " + page);
         }
     }

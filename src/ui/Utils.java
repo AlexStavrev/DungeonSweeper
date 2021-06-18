@@ -37,6 +37,27 @@ public class Utils {
     }
 
     /**
+     * A method to play a .wav file on a loop
+     * @param name name of the file
+     */
+    public void playSoundOnLoop(String name) {
+        SwingUtilities.invokeLater(() -> {
+            try(InputStream is = getClass().getResourceAsStream(String.format("audio/%s.wav", name));
+                AudioInputStream sound = AudioSystem.getAudioInputStream(is)
+            ){
+                DataLine.Info info = new DataLine.Info (Clip.class, sound.getFormat());
+                final Clip clip = (Clip)AudioSystem.getLine(info);
+                clip.open(sound);
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
+                clip.start();
+            } catch (IOException | LineUnavailableException | UnsupportedAudioFileException e) {
+                System.err.println("ERROR: Playing sound has failed");
+                e.printStackTrace();
+            }
+        });
+    }
+
+    /**
      * A method to play a .wav sound from the resources folder
      * @param name name of the file
      */
