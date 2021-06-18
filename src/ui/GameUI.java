@@ -15,6 +15,8 @@ import java.awt.event.MouseEvent;
 
 public class GameUI extends JPanel {
 
+    private MainUI parent;
+
     private Difficulty difficulty;
 
     private GameController gameController;
@@ -25,21 +27,13 @@ public class GameUI extends JPanel {
     private JPanel gamePanel;
 
     /**
-     * Standard constructor
-     */
-    public GameUI() {initComponents();}
-
-    /**
      * Constructor accepting difficulty
      * @param difficulty the amount of mines
      */
-    public GameUI(Difficulty difficulty) {
-        this();
-        setDifficulty(difficulty);
-    }
-
-    public void setDifficulty(Difficulty difficulty) {
+    public GameUI(MainUI parent, Difficulty difficulty) {
+        this.parent = parent;
         this.difficulty = difficulty;
+        initComponents();
         initGameBoard();
     }
 
@@ -97,13 +91,13 @@ public class GameUI extends JPanel {
 
         //---- pauseButton ----
         JButton pauseButton = new JButton("▐ ▌");
-        pauseButton.setPreferredSize(new Dimension(pauseButton.getHeight(), pauseButton.getHeight()));
+        pauseButton.setFocusable(false);
         pauseButton.setBorder(BorderFactory.createEmptyBorder());
         pauseButton.setBackground(new Color(80, 80, 80));
         pauseButton.setForeground(Color.WHITE);
         pauseButton.setFont(new Font("Arial",Font.BOLD, 20));
         pauseButton.setOpaque(true);
-        pauseButton.addActionListener(e -> System.out.println("pause"));
+        pauseButton.addActionListener(e -> parent.selectPage("mainPanel"));
         add(pauseButton, new GridBagConstraints(4, 0, 1, 2, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets(10, 10, 10, 10), 0, 0));
@@ -114,6 +108,7 @@ public class GameUI extends JPanel {
             @Override
             public int getTotalSeconds() {return timer.getTotalSeconds();}
         };
+
         gamePanel = new JPanel();
         gamePanel.removeAll();
         gamePanel.setBackground(new Color(27, 27, 35));

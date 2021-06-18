@@ -48,7 +48,7 @@ public class GameController {
      * @param x the x-coord of the cell
      * @param y the y-coord of the cell
      */
-    public void revealCellAt(int x, int y) {
+    public void revealCellAt(int x, int y) { //TODO change score formula
         if (game.getGrid().getCellAt(x, y).getValue() == Value.BOMB) {
             game.setState(GameState.LOST);
         } else {

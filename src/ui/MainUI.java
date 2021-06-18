@@ -1,6 +1,7 @@
 package ui;
 
 import model.Difficulty;
+import model.Game;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +45,7 @@ public class MainUI extends JFrame {
         EventQueue.invokeLater(() -> {
             try {
                 JFrame mainFrame = new MainUI();
-                mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 mainFrame.setTitle("Dungeon Sweeper");
                 URL url = mainFrame.getClass().getResource("images/icon.png");
                 ImageIcon icon = new ImageIcon(url);
@@ -83,8 +84,6 @@ public class MainUI extends JFrame {
      * A method to initialize the gui components and other elements
      */
     private void initComponents() {
-        //======== game page ========
-        gamePanel = new GameUI();
         //======== main page ========
         JPanel mainPanel = new JPanel();
         GridBagLayout gbl_contentPane = new GridBagLayout();
@@ -99,7 +98,7 @@ public class MainUI extends JFrame {
         JButton playButton = new JButton("PLAY");
         formatElement(playButton, buttonBackground);
         playButton.addActionListener(e -> {
-            gamePanel.setDifficulty(difficultyList.get(selectedDifficultyIndex));
+            contentPane.add(new GameUI(this, difficultyList.get(selectedDifficultyIndex)), "gamePanel");
             selectPage("gamePanel");
         });
         mainPanel.add(playButton, new GridBagConstraints(1, 1, 3, 1, 0.0, 0.0,
@@ -155,7 +154,6 @@ public class MainUI extends JFrame {
         pages = new CardLayout(0, 0);
         contentPane.setLayout(pages);
         contentPane.add(mainPanel, "mainPanel");
-        contentPane.add(gamePanel, "gamePanel");
         setContentPane(contentPane);
     }
 
@@ -163,7 +161,7 @@ public class MainUI extends JFrame {
      * A method to select a page when using the sidebar buttons
      * @param page name of the page
      */
-    private void selectPage(String page) {
+    public void selectPage(String page) {
         switch (page) {
             case "mainPanel", "gamePanel" -> pages.show(contentPane, page);
             default -> throw new IllegalStateException("Unexpected page: " + page);
