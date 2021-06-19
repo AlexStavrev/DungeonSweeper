@@ -116,7 +116,7 @@ public class MainUI extends JFrame {
         selectedDifficultyIndex = 0;
         difficultyList.add(new Difficulty("Easy", 10, 9, 9,  5, 0));
         difficultyList.add(new Difficulty("Normal", 30, 15, 10, 7, 0));
-        difficultyList.add(new Difficulty("Hard", 50, 21, 10, 10, 0));
+        difficultyList.add(new Difficulty("Hard", 40, 21, 10, 10, 0));
 
         defaultColor = new Color(27, 27, 35);
         buttonBackground = new Color(82, 82, 82);
@@ -138,6 +138,7 @@ public class MainUI extends JFrame {
         JButton playButton = new JButton("PLAY");
         formatElement(playButton, buttonBackground);
         playButton.addActionListener(e -> {
+            Utils.getInstance().playSound("click");
             if(gamePanel != null) {
                 contentPane.remove(gamePanel);
             }
@@ -153,7 +154,10 @@ public class MainUI extends JFrame {
         //---- leftArrow ----
         JButton leftArrow = new JButton("◀");
         formatElement(leftArrow, buttonBackground);
-        leftArrow.addActionListener(e -> selectedDifficultyByIndex(((--selectedDifficultyIndex) >= 0) ? selectedDifficultyIndex : difficultyList.size()-1));
+        leftArrow.addActionListener(e -> {
+            Utils.getInstance().playSound("click");
+            selectedDifficultyByIndex(((--selectedDifficultyIndex) >= 0) ? selectedDifficultyIndex : difficultyList.size() - 1);
+        });
         mainPanel.add(leftArrow, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));
@@ -170,7 +174,10 @@ public class MainUI extends JFrame {
         //---- rightArrow ----
         JButton rightArrow = new JButton("▶");
         formatElement(rightArrow, buttonBackground);
-        rightArrow.addActionListener(e -> selectedDifficultyByIndex((++selectedDifficultyIndex < difficultyList.size()) ? selectedDifficultyIndex : 0));
+        rightArrow.addActionListener(e -> {
+            Utils.getInstance().playSound("click");
+            selectedDifficultyByIndex((++selectedDifficultyIndex < difficultyList.size()) ? selectedDifficultyIndex : 0);
+        });
         mainPanel.add(rightArrow, new GridBagConstraints(3, 2, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));

@@ -114,6 +114,7 @@ public class GameUI extends JPanel {
         };
 
         gamePanel = new JPanel();
+        gamePanel.setVisible(false);
         gamePanel.removeAll();
         gamePanel.setBackground(new Color(27, 27, 35));
         add(gamePanel, new GridBagConstraints(0, 2, 5, 1, 0.0, 0.0,
@@ -130,17 +131,28 @@ public class GameUI extends JPanel {
         gameController.startGame();
         GameGrid grid = gameController.getGame().getGrid();
 
-        for (int y = 0; y < difficulty.getRows(); y++) {
-            for (int x = 0; x < difficulty.getColumns(); x++) {
-                Cell cell = grid.getCellAt(x, y);
-                UICell button = new UICell(cell, Utils.getInstance().getIconForValue(cell.getValue()), gameController);
-                button.setBorder(BorderFactory.createEmptyBorder());
-                gamePanel.add(button, new GridBagConstraints(x, y, 1, 1, 0.0, 0.0,
-                        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                        new Insets(0, 0, 0, 0), 0, 0));
-                formatCellButtonAt(button);
+        SwingWorker loadBoard = new SwingWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                for (int y = 0; y < difficulty.getRows(); y++) {
+                    for (int x = 0; x < difficulty.getColumns(); x++) {
+                        Cell cell = grid.getCellAt(x, y);
+                        UICell button = new UICell(cell, Utils.getInstance().getIconForValue(cell.getValue()), gameController);
+                        button.setBorder(BorderFactory.createEmptyBorder());
+                        gamePanel.add(button, new GridBagConstraints(x, y, 1, 1, 0.0, 0.0,
+                                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                                new Insets(0, 0, 0, 0), 0, 0));
+                        formatCellButtonAt(button);
+                    }
+                }
+                return null;
             }
-        }
+            @Override
+            public void done() {
+                gamePanel.setVisible(true);
+            }
+        };
+        loadBoard.execute();
     }
 
     /**
