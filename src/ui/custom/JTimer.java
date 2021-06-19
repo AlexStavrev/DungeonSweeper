@@ -17,6 +17,9 @@ public class JTimer extends JLabel implements JTimerIF {
     // the thread it runs on
     Thread timerThread;
 
+    // The functional interface to define what will happen when finished
+    public Finishable done;
+
     /**
      * Standard constructor
      * @param minutes minutes
@@ -26,6 +29,10 @@ public class JTimer extends JLabel implements JTimerIF {
         super();
         setMinutes(minutes);
         setSeconds(seconds);
+    }
+
+    public void addFinishAction(Finishable e) {
+        this.done = e;
     }
 
     /**
@@ -48,7 +55,7 @@ public class JTimer extends JLabel implements JTimerIF {
                 }
             }
             if (active) {
-                done();
+                finish();
             }
         });
         timerThread.setDaemon(true);
@@ -56,10 +63,13 @@ public class JTimer extends JLabel implements JTimerIF {
     }
 
     /**
-     * A method to Override which gets called when the timer hits 0
+     * A method you need to Override which gets called when the timer hits 0
+     * From {@link Finishable} functional interface
      */
     @Override
-    public void done() {}
+    public void finish() {
+        done.finish();
+    }
 
     /**
      * A method to activate the timer

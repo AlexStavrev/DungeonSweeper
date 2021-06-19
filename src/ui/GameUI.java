@@ -52,10 +52,11 @@ public class GameUI extends JPanel {
         setBackground(new Color(27, 27, 35));
 
         //---- time ----
-        timer = new JTimer(5, 0) {
-            @Override
-            public void done() {endGame();}
-        };
+        timer = new JTimer(0, 10);
+        timer.addFinishAction(() -> {
+            gameController.getGame().setState(GameState.LOST);
+            looseGame();
+        });
         timer.setFont(new Font("Arial", Font.BOLD, 20));
         timer.setForeground(Color.WHITE);
         timer.setHorizontalAlignment(SwingConstants.LEFT);
@@ -151,7 +152,7 @@ public class GameUI extends JPanel {
             }
             cellButton.reveal();
             if (cell.getValue().isABomb() && !cell.isFlagged()) {
-                endGame();
+                looseGame();
             } else {
                 if (gameController.getGame().getState() == GameState.WON) {
                     winGame();
@@ -178,10 +179,6 @@ public class GameUI extends JPanel {
      */
     private void endGame() {
         timer.pause();
-        if(gameController.getGame().getState() == GameState.LOST) {
-            Utils.getInstance().playSound("loose");
-        }
-        imageButton.setIcon(Utils.getInstance().resizedImage("images/dead.jpg", Utils.TILE_SIZE, Utils.TILE_SIZE));
         for (Component cell : gamePanel.getComponents()) {
             if (cell instanceof UICell cellButton) {
                 if (cellButton.getActionListeners().length > 0) {
@@ -192,6 +189,15 @@ public class GameUI extends JPanel {
                 }
             }
         }
+    }
+
+    /**
+     * A method to win the game
+     */
+    private void looseGame() {
+        endGame();
+        Utils.getInstance().playSound("loose");
+        imageButton.setIcon(Utils.getInstance().resizedImage("images/dead.jpg", Utils.TILE_SIZE, Utils.TILE_SIZE));
     }
 
     /**

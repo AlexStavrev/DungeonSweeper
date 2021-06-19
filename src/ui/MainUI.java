@@ -1,8 +1,6 @@
 package ui;
 
 import model.Difficulty;
-import model.Game;
-import ui.custom.SplashPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,28 +13,32 @@ import java.util.List;
 public class MainUI extends JFrame {
 
     // The default dark color used for e.g. on the form's background
-    private final Color defaultColor;
+    private Color defaultColor;
     // Default button bg color
-    private final Color buttonBackground;
+    private Color buttonBackground;
     // Hover bg color for a button
-    private final Color buttonHoverBackground;
+    private Color buttonHoverBackground;
     // Hover fg color for a button
-    private final Color buttonHoverForeground;
+    private Color buttonHoverForeground;
 
     // A list of all the difficulties
     private List<Difficulty> difficultyList;
     // An index to keep track of the selected difficulty
     int selectedDifficultyIndex;
 
-    // A UI element
+    //============= UI Purpose Elements =============
+    // A UI element for the difficulty label
     JLabel difficultyLabel;
-
     // The main panel
     JPanel contentPane;
     // Cards layout so the UI can switch between pages
-    private CardLayout pages;
+    private final CardLayout pages;
     // The page where the game will be played
     private GameUI gamePanel;
+    // true if the swing worker has done loading elements
+    boolean isSwingWorkerDone;
+    // true if the splash screen has done playing
+    boolean isSplashScreenDone;
 
     /**
      * The main method for this frame
@@ -69,6 +71,47 @@ public class MainUI extends JFrame {
      * Standard constructor for this class
      */
     public MainUI() {
+        //======== splash ========
+        SplashPanel splash = new SplashPanel();
+        splash.addFinishAction(() -> {
+            //System.out.println("SPLASH DONE");
+            isSplashScreenDone = true;
+            selectPage("mainPanel");
+        });
+        //======== this ========
+        contentPane = new JPanel();
+        pages = new CardLayout(0, 0);
+        contentPane.setLayout(pages);
+        contentPane.add(splash, "splashPane");
+        setContentPane(contentPane);
+
+        // Swing worker to load the rest in the background while the splash screen is playing
+        SwingWorker<Object, Object> initComponentsInBackground = new SwingWorker<>() {
+            @Override
+            protected Object doInBackground() {
+                initComponents();
+                return null;
+            }
+            @Override
+            protected void done() {
+                //System.out.println("WORKER DONE");
+                isSwingWorkerDone = true;
+                selectPage("mainPanel");
+            }
+        };
+        initComponentsInBackground.execute();
+    }
+
+    /**
+     * A method to initialize the gui components and other elements
+     */
+    private void initComponents() {
+        /*try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+        //======= this =========
         difficultyList = new LinkedList<>();
         selectedDifficultyIndex = 0;
         difficultyList.add(new Difficulty("Easy", 10, 9, 9));
@@ -79,13 +122,7 @@ public class MainUI extends JFrame {
         buttonBackground = new Color(82, 82, 82);
         buttonHoverBackground = new Color(60, 60, 60);
         buttonHoverForeground = new Color(200, 200, 200);
-        initComponents();
-    }
 
-    /**
-     * A method to initialize the gui components and other elements
-     */
-    private void initComponents() {
         //======== main page ========
         JPanel mainPanel = new JPanel();
         GridBagLayout gbl_contentPane = new GridBagLayout();
@@ -95,6 +132,7 @@ public class MainUI extends JFrame {
         gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE, 0.0};
         mainPanel.setLayout(gbl_contentPane);
         mainPanel.setBackground(defaultColor);
+        contentPane.add(mainPanel, "mainPanel");
 
         //---- playButton ----
         JButton playButton = new JButton("PLAY");
@@ -154,21 +192,6 @@ public class MainUI extends JFrame {
                 GridBagConstraints.SOUTH, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));
         makeHoverable(exitButton, new Color(140, 0, 0), buttonHoverForeground);
-
-        //======== splash ========
-        SplashPanel splash = new SplashPanel() {
-            @Override
-            public void done() {
-                selectPage("mainPanel");
-            }
-        };
-        //======== this ========
-        contentPane = new JPanel();
-        pages = new CardLayout(0, 0);
-        contentPane.setLayout(pages);
-        contentPane.add(splash, "splashPane");
-        contentPane.add(mainPanel, "mainPanel");
-        setContentPane(contentPane);
     }
 
     /**
@@ -177,7 +200,12 @@ public class MainUI extends JFrame {
      */
     public void selectPage(String page) {
         switch (page) {
-            case "mainPanel", "gamePanel", "splashPanel" -> pages.show(contentPane, page);
+            case "mainPanel", "gamePanel" -> {
+                if(isSplashScreenDone && isSwingWorkerDone) {
+                    pages.show(contentPane, page);
+                }
+            }
+            case "splashPanel" -> pages.show(contentPane, page);
             default -> throw new IllegalStateException("Unexpected page: " + page);
         }
     }
@@ -190,7 +218,6 @@ public class MainUI extends JFrame {
         selectedDifficultyIndex = index;
         difficultyLabel.setText(difficultyList.get(index).getName().toUpperCase());
     }
-
 
     /**
      * A method to format an element

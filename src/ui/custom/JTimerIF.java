@@ -1,6 +1,6 @@
 package ui.custom;
 
-public interface JTimerIF extends EventIF {
+public interface JTimerIF extends Finishable {
     void startTimer();
     void pause();
     void resume();

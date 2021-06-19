@@ -1,14 +1,18 @@
-package ui.custom;
+package ui;
 
-import ui.Utils;
+import ui.custom.Finishable;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
+import java.io.IOException;
 
-public class SplashPanel extends JPanel implements EventIF {
+public class SplashPanel extends JPanel implements Finishable {
+    // A Finishable to determine what will happen when the splash screen is over
+    Finishable action;
+
     /**
      * Standard Constructor for the class
      */
@@ -53,37 +57,34 @@ public class SplashPanel extends JPanel implements EventIF {
         //======== this ========
         Thread splash = new Thread(() -> {
             try {
-                for (int amp = 0; amp <= 81; amp++) {
-                    try {
-                        Thread.sleep(1);
-                        try {
-                            BufferedImage bim = ImageIO.read(getClass().getResource("images/LogoIcon.png"));
-                            Image icon = new ImageIcon(fadingImage(amp, bim)).getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
-                            logoButton.setIcon(new ImageIcon(icon));
+                for (int amp = 0; amp <= 54; amp++) {
+                    Thread.sleep(1);
 
-                            BufferedImage bimTitle = ImageIO.read(getClass().getResource("images/Title.png"));
-                            Image iconTitle = new ImageIcon(fadingImage(amp, bimTitle)).getImage().getScaledInstance(800, 113, Image.SCALE_SMOOTH);
-                            titleButton.setIcon(new ImageIcon(iconTitle));
+                    BufferedImage bim = ImageIO.read(getClass().getResource("images/LogoIcon.png"));
+                    Image icon = new ImageIcon(fadingImage(amp, bim)).getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+                    logoButton.setIcon(new ImageIcon(icon));
 
-                            setBackground(new Color(amp/3, amp/3, amp/3+7));
-                            label.setForeground(new Color(amp*3+10, amp*3+10, amp*3+10));
+                    BufferedImage bimTitle = ImageIO.read(getClass().getResource("images/Title.png"));
+                    Image iconTitle = new ImageIcon(fadingImage(amp, bimTitle)).getImage().getScaledInstance(800, 113, Image.SCALE_SMOOTH);
+                    titleButton.setIcon(new ImageIcon(iconTitle));
 
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    } catch (InterruptedException ex) {
-                        ex.printStackTrace();
-                    }
+                    setBackground(new Color(amp/2, amp/2, amp/2+7));
+                    label.setForeground(new Color(amp*4+10, amp*4+10, amp*4+10));
                 }
                 Thread.sleep(1000);
-                done();
-            } catch (InterruptedException e) {
+                finish();
+            } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }
         });
         splash.setDaemon(true);
         splash.start();
     }
+
+    public void addFinishAction(Finishable e) {
+        this.action = e;
+    }
+
 
     private void formatButton(JButton button) {
         button.setFocusable(false);
@@ -100,5 +101,7 @@ public class SplashPanel extends JPanel implements EventIF {
     }
 
     @Override
-    public void done() {}
+    public void finish() {
+        action.finish();
+    }
 }
