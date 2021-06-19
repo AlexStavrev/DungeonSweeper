@@ -13,6 +13,10 @@ public class Difficulty implements DifficultyModel {
     private int rows;
     // The name of the difficulty
     private String name;
+    // The amount of minutes
+    private int minutes;
+    // The amount of seconds
+    private int seconds;
 
     /**
      * A standard constructor for the class
@@ -20,11 +24,13 @@ public class Difficulty implements DifficultyModel {
      * @param columns the amount of columns
      * @param rows the amount of rows
      */
-    public Difficulty(String name, int amountOfMines, int columns, int rows) {
+    public Difficulty(String name, int amountOfMines, int columns, int rows, int minutes, int seconds) {
         setName(name);
         setAmountOfMines(amountOfMines);
         setColumns(columns);
         setRows(rows);
+        setMinutes(minutes);
+        setSeconds(seconds);
     }
 
     //Interface methods
@@ -66,5 +72,25 @@ public class Difficulty implements DifficultyModel {
     @Override
     public int getRows() {
         return rows;
+    }
+
+    @Override
+    public void setMinutes(int minutes) {
+        this.minutes = minutes;
+    }
+
+    @Override
+    public int getMinutes() {
+        return minutes;
+    }
+
+    @Override
+    public void setSeconds(int seconds) {
+        this.seconds = seconds;
+    }
+
+    @Override
+    public int getSeconds() {
+        return seconds;
     }
 }

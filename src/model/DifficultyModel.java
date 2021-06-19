@@ -19,4 +19,12 @@ public interface DifficultyModel {
     // Get or set the amount of rows
     void setRows(int rows);
     int getRows();
+
+    // Get or set the amount of rows
+    void setMinutes(int minutes);
+    int getMinutes();
+
+    // Get or set the amount of rows
+    void setSeconds(int seconds);
+    int getSeconds();
 }

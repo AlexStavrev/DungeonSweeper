@@ -16,7 +16,8 @@ import java.util.Random;
  */
 public class Utils {
     // The size of the tiles in pixels
-    public static final int TILE_SIZE = 70;
+
+    public static final int TILE_SIZE = (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()/12.3);
     // The singleton instance
     private static Utils instance;
 

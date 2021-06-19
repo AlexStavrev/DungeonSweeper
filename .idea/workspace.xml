@@ -3,12 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="ba2c3fc0-9b2b-4a40-a945-1bb0406f9829" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Difficulty.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Difficulty.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/DifficultyModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/DifficultyModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/GameUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/GameUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/MainUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/MainUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/custom/EventIF.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/custom/Finishable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/custom/JTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/custom/JTimer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/custom/JTimerIF.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/custom/JTimerIF.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ui/custom/SplashPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/SplashPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/SplashPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/SplashPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/Utils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,6 +26,14 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
   <component name="ProjectId" id="1u56HHYtM2yzbZA9nlG7WiAmehl" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -38,7 +46,8 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.uml" />
   </component>
   <component name="RunManager" selected="Application.MainUI">
     <configuration name="GameForm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -67,13 +76,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -100,7 +111,8 @@
       <workItem from="1624030579706" duration="9536000" />
       <workItem from="1624041708846" duration="7862000" />
       <workItem from="1624054726413" duration="1616000" />
-      <workItem from="1624095899907" duration="4921000" />
+      <workItem from="1624095899907" duration="6042000" />
+      <workItem from="1624141661009" duration="1783000" />
     </task>
     <servers />
   </component>

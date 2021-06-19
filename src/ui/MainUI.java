@@ -107,16 +107,16 @@ public class MainUI extends JFrame {
      */
     private void initComponents() {
         /*try {
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }*/
         //======= this =========
         difficultyList = new LinkedList<>();
         selectedDifficultyIndex = 0;
-        difficultyList.add(new Difficulty("Easy", 10, 9, 9));
-        difficultyList.add(new Difficulty("Normal", 30, 15, 10));
-        difficultyList.add(new Difficulty("Hard", 50, 21, 10));
+        difficultyList.add(new Difficulty("Easy", 10, 9, 9,  5, 0));
+        difficultyList.add(new Difficulty("Normal", 30, 15, 10, 7, 0));
+        difficultyList.add(new Difficulty("Hard", 50, 21, 10, 10, 0));
 
         defaultColor = new Color(27, 27, 35);
         buttonBackground = new Color(82, 82, 82);
@@ -262,7 +262,7 @@ public class MainUI extends JFrame {
     /**
      * Used to remove highlight on button click
      */
-    public class NoHighlightButtonModel extends DefaultButtonModel    {
+    public static class NoHighlightButtonModel extends DefaultButtonModel {
         @Override
         public boolean isPressed() {return false;}
         @Override

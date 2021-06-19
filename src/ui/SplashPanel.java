@@ -5,6 +5,8 @@ import ui.custom.Finishable;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.IOException;
@@ -55,6 +57,12 @@ public class SplashPanel extends JPanel implements Finishable {
                 new Insets(0, 0, 0, 0), 0, 0));
 
         //======== this ========
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                finish();
+            }
+        });
         Thread splash = new Thread(() -> {
             try {
                 for (int amp = 0; amp <= 54; amp++) {
@@ -84,7 +92,6 @@ public class SplashPanel extends JPanel implements Finishable {
     public void addFinishAction(Finishable e) {
         this.action = e;
     }
-
 
     private void formatButton(JButton button) {
         button.setFocusable(false);

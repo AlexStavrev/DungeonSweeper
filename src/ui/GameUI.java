@@ -15,7 +15,7 @@ import java.awt.event.MouseEvent;
 
 public class GameUI extends JPanel {
 
-    private MainUI parent;
+    private final MainUI parent;
 
     private Difficulty difficulty;
 
@@ -52,7 +52,7 @@ public class GameUI extends JPanel {
         setBackground(new Color(27, 27, 35));
 
         //---- time ----
-        timer = new JTimer(0, 10);
+        timer = new JTimer(difficulty.getMinutes(), difficulty.getSeconds());
         timer.addFinishAction(() -> {
             gameController.getGame().setState(GameState.LOST);
             looseGame();
@@ -98,7 +98,10 @@ public class GameUI extends JPanel {
         pauseButton.setForeground(Color.WHITE);
         pauseButton.setFont(new Font("Arial",Font.BOLD, 20));
         pauseButton.setOpaque(true);
-        pauseButton.addActionListener(e -> parent.selectPage("mainPanel"));
+        pauseButton.addActionListener(e -> {
+            timer.pause();
+            parent.selectPage("mainPanel");
+        });
         add(pauseButton, new GridBagConstraints(4, 0, 1, 2, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets(10, 10, 10, 10), 0, 0));
