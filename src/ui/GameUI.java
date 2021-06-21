@@ -74,7 +74,7 @@ public class GameUI extends JPanel {
                 new Insets(0, 20, 5, 0), 0, 0));
 
         //---- imageButton ----
-        imageButton = new JButton(Utils.getInstance().resizedImage("images/alive.jpg", Utils.TILE_SIZE, Utils.TILE_SIZE));
+        imageButton = new JButton(Utils.getInstance().getImage("alive"));
         imageButton.setBorderPainted(false);
         imageButton.setBorder(BorderFactory.createEmptyBorder());
         imageButton.setContentAreaFilled(false);
@@ -212,7 +212,7 @@ public class GameUI extends JPanel {
     private void looseGame() {
         endGame();
         Utils.getInstance().playSound("loose");
-        imageButton.setIcon(Utils.getInstance().resizedImage("images/dead.jpg", Utils.TILE_SIZE, Utils.TILE_SIZE));
+        imageButton.setIcon(Utils.getInstance().getImage("dead"));
     }
 
     /**
@@ -221,7 +221,7 @@ public class GameUI extends JPanel {
     private void winGame() {
         endGame();
         Utils.getInstance().playSound("win");
-        imageButton.setIcon(Utils.getInstance().resizedImage("images/won.jpg", Utils.TILE_SIZE, Utils.TILE_SIZE));
+        imageButton.setIcon(Utils.getInstance().getImage("won"));
     }
 
     /**

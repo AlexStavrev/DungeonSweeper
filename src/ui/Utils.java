@@ -5,8 +5,12 @@ import model.enums.Value;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -16,24 +20,30 @@ import java.util.Random;
  */
 public class Utils {
     // The size of the tiles in pixels
-
     public static final int TILE_SIZE = (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()/12.3);
     // The singleton instance
-    private static Utils instance;
+    private static final Utils instance = new Utils();
+
+    //========== Images ==========
+    // A map of all icons
+    private final HashMap<String, ImageIcon> icons;
+    // used to get random icons
+    private final Random random;
 
     /**
      * private constructor to complete the Singleton pattern
      */
-    private Utils() {}
+    private Utils() {
+        icons = new HashMap<>();
+        loadImages();
+        random = new Random();
+    }
 
     /**
      * A method to get the Singleton instance or create one if there isn't
      * @return instance
      */
     public static Utils getInstance() {
-        if(instance == null) {
-            instance = new Utils();
-        }
         return instance;
     }
 
@@ -80,26 +90,19 @@ public class Utils {
 
     /**
      * A method to get a random coins icon
+     * @param name name of the image
+     * @return icon
+     */
+    public ImageIcon getImage(String name) {
+        return icons.get(name);
+    }
+
+    /**
+     * A method to get a random coins icon
      * @return icon
      */
     public ImageIcon getRandomTreasureIcon() {
-        return resizedImage(String.format("images/coins (%d).jpg", new Random().nextInt(2) + 1), TILE_SIZE, TILE_SIZE);
-    }
-
-    /**
-     * A method to get a random flagged tile icon
-     * @return icon
-     */
-    public ImageIcon getRandomFlagIcon() {
-        return resizedImage(String.format("images/flags (%d).jpg", new Random().nextInt(16) + 1), TILE_SIZE, TILE_SIZE);
-    }
-
-    /**
-     * A method to get a random tile icon
-     * @return icon
-     */
-    public ImageIcon getRandomTileIcon() {
-        return resizedImage(String.format("images/tiles (%d).jpg", new Random().nextInt(16) + 1), TILE_SIZE, TILE_SIZE);
+        return getImage(String.format("coins (%d)", random.nextInt(2) + 1));
     }
 
     /**
@@ -107,7 +110,7 @@ public class Utils {
      * @return icon
      */
     public ImageIcon getRandomDeadEnemyIcon() {
-        return resizedImage(String.format("images/dead_enemy (%d).jpg", new Random().nextInt(4) + 1), TILE_SIZE, TILE_SIZE);
+        return getImage(String.format("dead_enemy (%d)", random.nextInt(4) + 1));
     }
 
     /**
@@ -115,18 +118,17 @@ public class Utils {
      * @return icon
      */
     public ImageIcon getRandomEnemyIcon() {
-        return resizedImage(String.format("images/enemy (%d).jpg", new Random().nextInt(4) + 1), TILE_SIZE, TILE_SIZE);
+        return getImage(String.format("enemy (%d)", random.nextInt(4) + 1));
     }
 
     /**
      * A method to resize an icon gotten from the resources
-     * @param name name of the file
+     * @param icon the icon
      * @param width new width
      * @param height new height
      * @return resized icon
      */
-    public ImageIcon resizedImage(String name, int width, int height) {
-        ImageIcon icon = new ImageIcon(getClass().getResource(name));
+    public ImageIcon resizedImage(ImageIcon icon, int width, int height) {
         return new ImageIcon(icon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
     }
 
@@ -140,12 +142,29 @@ public class Utils {
             case -1:
                 return getRandomEnemyIcon();
             case 0:
-                return resizedImage("images/revealed.jpg", TILE_SIZE, TILE_SIZE);
+                return getImage("revealed");
             case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8:
-                return resizedImage(String.format("images/%d.jpg", value.getValue()), TILE_SIZE, TILE_SIZE);
+                return getImage(String.valueOf(value.getValue()));
             default:
                 //TODO no such value exception
         }
         return null;
+    }
+
+    private void loadImages() {
+        URL url = getClass().getResource("images/");
+        if (url == null) {
+            // TODO missing folder
+        } else {
+            try {
+                File dir = new File(url.toURI());
+                for (File nextFile : dir.listFiles()) {
+                    ImageIcon icon = new ImageIcon(getClass().getResource(String.format("images/%s", nextFile.getName())));
+                    icons.put(nextFile.getName().replaceFirst("[.][^.]+$", ""), resizedImage(icon, TILE_SIZE, TILE_SIZE));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

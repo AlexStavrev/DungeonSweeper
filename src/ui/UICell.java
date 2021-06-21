@@ -17,8 +17,6 @@ import java.util.Random;
 public class UICell extends JButton {
     // The index of the icon. Used to find the same flagged icon
     private int imageNumber;
-    // The chance of finding a treasure in ZERO values cell
-    private final float TREASURE_CHANCE = 0.30F;
     // The cell in the grid representing this button
     private Cell cell;
     // The game controller responsible for this cell's game
@@ -43,7 +41,7 @@ public class UICell extends JButton {
         this.gameController = gameController;
         //===== super =====
         setImageNumber(random.nextInt(16) + 1);
-        setIcon(Utils.getInstance().resizedImage(String.format("images/tiles (%d).jpg", imageNumber), Utils.TILE_SIZE, Utils.TILE_SIZE));
+        setIcon(Utils.getInstance().getImage(String.format("tiles (%d)", imageNumber)));
         setBorderPainted(false);
         setOpaque(true);
         setPreferredSize(new Dimension(Utils.TILE_SIZE, Utils.TILE_SIZE));
@@ -59,7 +57,7 @@ public class UICell extends JButton {
             gameController.addScore(100); // Add points for flagged bomb
         } else if(!cell.isRevealed() && !cell.isFlagged()) {
             gameController.revealCellAt(cell.getX(), cell.getY());
-            if((cell.getValue() == Value.ZERO) && random.nextFloat() < TREASURE_CHANCE) {
+            if((cell.getValue() == Value.ZERO) && random.nextFloat() < gameController.getTreasureChance()) {
                 this.setCellIcon(Utils.getInstance().getRandomTreasureIcon());
                 gameController.addScore(500); //Add points for treasure
             }
@@ -74,8 +72,8 @@ public class UICell extends JButton {
         if(cell.isRevealed() || gameController.getGame().getState() != GameState.IN_GAME) return;
         gameController.toggleFlaggedCellAt(cell.getX(), cell.getY());
         if(cell.isFlagged()) {
-            this.setIcon(Utils.getInstance().resizedImage(String.format("images/flags (%d).jpg", imageNumber), Utils.TILE_SIZE, Utils.TILE_SIZE));
-        } else this.setIcon(Utils.getInstance().resizedImage(String.format("images/tiles (%d).jpg", imageNumber), Utils.TILE_SIZE, Utils.TILE_SIZE));
+            this.setIcon(Utils.getInstance().getImage(String.format("flags (%d)", imageNumber)));
+        } else this.setIcon(Utils.getInstance().getImage(String.format("tiles (%d)", imageNumber)));
     }
 
     /**

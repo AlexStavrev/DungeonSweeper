@@ -43,6 +43,10 @@ public class GameController {
         this(new Game(difficulty));
     }
 
+    public float getTreasureChance() {
+        return game.getTreasureChance();
+    }
+
     /**
      * A method to reveal a cell
      * @param x the x-coord of the cell
