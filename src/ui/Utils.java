@@ -20,7 +20,7 @@ import java.util.Random;
  */
 public class Utils {
     // The size of the tiles in pixels
-    public static final int TILE_SIZE = (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()/12.3);
+    public static int TILE_SIZE = (int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()/12.3);
     // The singleton instance
     private static final Utils instance = new Utils();
 
@@ -86,6 +86,18 @@ public class Utils {
                 e.printStackTrace();
             }
         });
+    }
+
+    /**
+     * A method to set the UI scale factor
+     * @param scale the UI scale factor
+     */
+    public void setUIScale(int scale) {
+        TILE_SIZE = scale;
+        for (String iconName: icons.keySet()) {
+            ImageIcon icon = icons.get(iconName);
+            icons.replace(iconName, resizedImage(icon, TILE_SIZE, TILE_SIZE));
+        }
     }
 
     /**

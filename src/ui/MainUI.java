@@ -55,10 +55,12 @@ public class MainUI extends JFrame {
                 mainFrame.setIconImage(icon.getImage());
                 // Remove the system's scale factor on the UI elements
                 System.setProperty("sun.java2d.uiScale", "1.0");
+                System.setProperty("sun.java2d.d3d", "false");
                 // Centres the dialog
                 mainFrame.setLocationRelativeTo(null);
                 mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 mainFrame.setUndecorated(true);
+                mainFrame.showOnScreen(1);
                 mainFrame.setVisible(true);
                 Utils.getInstance().playSoundOnLoop("music");
             } catch (Exception e) {
@@ -276,5 +278,25 @@ public class MainUI extends JFrame {
         public boolean isRollover() {return false;}
         @Override
         public void setRollover(boolean b) {}
+    }
+
+    /**
+     * A function to show the application on a specific screen
+     * @param screen screen's id
+     */
+    private void showOnScreen(int screen) {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] gs = ge.getScreenDevices();
+        if(screen > -1 && screen < gs.length) {
+            gs[screen].setFullScreenWindow(this);
+            Utils.getInstance().setUIScale((int)(gs[screen].getDefaultConfiguration().getBounds().height/12.3));
+        }
+        else if(gs.length > 0) {
+            gs[0].setFullScreenWindow(this);
+            Utils.getInstance().setUIScale((int)(gs[0].getDefaultConfiguration().getBounds().height/12.3));
+        }
+        else {
+            throw new RuntimeException( "No Screens Found" );
+        }
     }
 }
