@@ -5,13 +5,10 @@ import model.enums.Value;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
+import java.io.*;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
+import java.util.List;
 
 /**
  * A Singleton class to provide useful utilities
@@ -53,8 +50,9 @@ public class Utils {
      */
     public void playSoundOnLoop(String name) {
         SwingUtilities.invokeLater(() -> {
-            try(InputStream is = getClass().getResourceAsStream(String.format("audio/%s.wav", name));
-                AudioInputStream sound = AudioSystem.getAudioInputStream(is)
+            try(InputStream audioSrc = getClass().getResourceAsStream(String.format("audio/%s.wav", name));
+                InputStream bufferedIn = new BufferedInputStream(audioSrc);
+                AudioInputStream sound = AudioSystem.getAudioInputStream(bufferedIn)
             ){
                 DataLine.Info info = new DataLine.Info (Clip.class, sound.getFormat());
                 final Clip clip = (Clip)AudioSystem.getLine(info);
@@ -74,8 +72,9 @@ public class Utils {
      */
     public void playSound(String name) {
         SwingUtilities.invokeLater(() -> {
-            try(InputStream is = getClass().getResourceAsStream(String.format("audio/%s.wav", name));
-                AudioInputStream sound = AudioSystem.getAudioInputStream(is)
+            try(InputStream audioSrc = getClass().getResourceAsStream(String.format("audio/%s.wav", name));
+                InputStream bufferedIn = new BufferedInputStream(audioSrc);
+                AudioInputStream sound = AudioSystem.getAudioInputStream(bufferedIn)
             ){
                 DataLine.Info info = new DataLine.Info (Clip.class, sound.getFormat());
                 final Clip clip = (Clip)AudioSystem.getLine(info);
@@ -164,19 +163,15 @@ public class Utils {
     }
 
     private void loadImages() {
-        URL url = getClass().getResource("images/");
-        if (url == null) {
-            // TODO missing folder
-        } else {
-            try {
-                File dir = new File(url.toURI());
-                for (File nextFile : dir.listFiles()) {
-                    ImageIcon icon = new ImageIcon(getClass().getResource(String.format("images/%s", nextFile.getName())));
-                    icons.put(nextFile.getName().replaceFirst("[.][^.]+$", ""), resizedImage(icon, TILE_SIZE, TILE_SIZE));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try(final InputStream input = getClass().getResourceAsStream("images/");
+            final InputStreamReader inputReader = new InputStreamReader(input);
+            final BufferedReader bufferedReader = new BufferedReader(inputReader)) {
+            bufferedReader.lines().forEach(nextFile -> {
+                ImageIcon icon = new ImageIcon(getClass().getResource(String.format("images/%s", nextFile)));
+                icons.put(nextFile.replaceFirst("[.][^.]+$", ""), resizedImage(icon, TILE_SIZE, TILE_SIZE));
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

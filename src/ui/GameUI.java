@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class GameUI extends JPanel {
 
@@ -228,14 +229,12 @@ public class GameUI extends JPanel {
      * A method to update all cells on the board
      */
     private void updateBoard() {
-        EventQueue.invokeLater(() -> {
-            for (Component cell : gamePanel.getComponents()) {
-                if (cell instanceof UICell cellButton) {
-                    if (cellButton.getCell().isRevealed()) {
-                        cellButton.setIcon(cellButton.getCellIcon());
-                    }
+        for (Component cell : gamePanel.getComponents()) {
+            if (cell instanceof UICell cellButton) {
+                if (cellButton.getCell().isRevealed()) {
+                    cellButton.setIcon(cellButton.getCellIcon());
                 }
             }
-        });
+        }
     }
 }

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="DungeonSweeper:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/DungeonSweeper_jar</output-path>
+    <root id="archive" name="DungeonSweeper.jar">
+      <element id="module-output" name="DungeonSweeper" />
+    </root>
+  </artifact>
+</component>

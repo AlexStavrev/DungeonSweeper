@@ -60,7 +60,7 @@ public class MainUI extends JFrame {
                 mainFrame.setLocationRelativeTo(null);
                 mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
                 mainFrame.setUndecorated(true);
-                mainFrame.showOnScreen(1);
+                mainFrame.showOnScreen(0);
                 mainFrame.setVisible(true);
                 Utils.getInstance().playSoundOnLoop("music");
             } catch (Exception e) {
@@ -188,6 +188,7 @@ public class MainUI extends JFrame {
         //---- creditsButton ----
         JButton creditsButton = new JButton("CREDITS");
         formatElement(creditsButton, buttonBackground);
+        creditsButton.addActionListener(e -> showOnScreen(1));
         mainPanel.add(creditsButton, new GridBagConstraints(1, 3, 3, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));
@@ -287,16 +288,18 @@ public class MainUI extends JFrame {
     private void showOnScreen(int screen) {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] gs = ge.getScreenDevices();
+        Rectangle screenBounds;
         if(screen > -1 && screen < gs.length) {
-            gs[screen].setFullScreenWindow(this);
-            Utils.getInstance().setUIScale((int)(gs[screen].getDefaultConfiguration().getBounds().height/12.3));
+            screenBounds = gs[screen].getDefaultConfiguration().getBounds();
         }
         else if(gs.length > 0) {
-            gs[0].setFullScreenWindow(this);
-            Utils.getInstance().setUIScale((int)(gs[0].getDefaultConfiguration().getBounds().height/12.3));
+            screenBounds = gs[0].getDefaultConfiguration().getBounds();
         }
         else {
             throw new RuntimeException( "No Screens Found" );
         }
+        this.setLocation(screenBounds.getLocation());
+        Utils.getInstance().setUIScale((int)(screenBounds.height/12.3));
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 }
