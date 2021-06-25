@@ -6,9 +6,7 @@ import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.net.URL;
 import java.util.*;
-import java.util.List;
 
 /**
  * A Singleton class to provide useful utilities
@@ -27,12 +25,22 @@ public class Utils {
     // used to get random icons
     private final Random random;
 
+    //========== Settings ==========
+    // A value between 0-100 for the music volume
+    private int musicVolume;
+    // The clip the music is played on
+    private Clip musicClip;
+    // A value between 0-100 for the effects volume
+    private int effectsVolume;
+
     /**
      * private constructor to complete the Singleton pattern
      */
     private Utils() {
         icons = new HashMap<>();
         loadImages();
+        musicVolume = 50;
+        effectsVolume = 50;
         random = new Random();
     }
 
@@ -48,17 +56,21 @@ public class Utils {
      * A method to play a .wav file on a loop
      * @param name name of the file
      */
-    public void playSoundOnLoop(String name) {
+    public void playMusic(String name) {
+        if (musicVolume <= 0) {
+            return;
+        }
         SwingUtilities.invokeLater(() -> {
             try(InputStream audioSrc = getClass().getResourceAsStream(String.format("audio/%s.wav", name));
                 InputStream bufferedIn = new BufferedInputStream(audioSrc);
                 AudioInputStream sound = AudioSystem.getAudioInputStream(bufferedIn)
             ){
                 DataLine.Info info = new DataLine.Info (Clip.class, sound.getFormat());
-                final Clip clip = (Clip)AudioSystem.getLine(info);
-                clip.open(sound);
-                clip.loop(Clip.LOOP_CONTINUOUSLY);
-                clip.start();
+                musicClip = (Clip)AudioSystem.getLine(info);
+                musicClip.open(sound);
+                musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+                musicClip.start();
+                setMusicVolume(musicVolume);
             } catch (IOException | LineUnavailableException | UnsupportedAudioFileException e) {
                 System.err.println("ERROR: Playing sound has failed");
                 e.printStackTrace();
@@ -71,6 +83,9 @@ public class Utils {
      * @param name name of the file
      */
     public void playSound(String name) {
+        if (effectsVolume <= 0) {
+            return;
+        }
         SwingUtilities.invokeLater(() -> {
             try(InputStream audioSrc = getClass().getResourceAsStream(String.format("audio/%s.wav", name));
                 InputStream bufferedIn = new BufferedInputStream(audioSrc);
@@ -79,6 +94,9 @@ public class Utils {
                 DataLine.Info info = new DataLine.Info (Clip.class, sound.getFormat());
                 final Clip clip = (Clip)AudioSystem.getLine(info);
                 clip.open(sound);
+                FloatControl gainControl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
+                gainControl.setValue(20f * (float)Math.log10(effectsVolume/100f));
+                clip.setFramePosition(0);
                 clip.start();
             } catch (IOException | LineUnavailableException | UnsupportedAudioFileException e) {
                 System.err.println("ERROR: Playing sound has failed");
@@ -173,5 +191,19 @@ public class Utils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public void setMusicVolume(int volume) {
+        if (volume < 0 || volume > 100)
+            throw new IllegalArgumentException("Volume not valid: " + volume);
+        FloatControl gainControl = (FloatControl) musicClip.getControl(FloatControl.Type.MASTER_GAIN);
+        gainControl.setValue(20f * (float)Math.log10(volume/100f));
+    }
+
+    public void setEffectsVolume(int volume) {
+        if (volume < 0 || volume > 100)
+            throw new IllegalArgumentException("Volume not valid: " + volume);
+        this.effectsVolume = volume;
     }
 }

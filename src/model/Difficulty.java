@@ -93,4 +93,9 @@ public class Difficulty implements DifficultyModel {
     public int getSeconds() {
         return seconds;
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

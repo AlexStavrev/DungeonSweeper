@@ -14,6 +14,8 @@ import java.io.IOException;
 public class SplashPanel extends JPanel implements Finishable {
     // A Finishable to determine what will happen when the splash screen is over
     Finishable action;
+    // Checks if the screen has already finished
+    boolean finished;
 
     /**
      * Standard Constructor for the class
@@ -80,7 +82,9 @@ public class SplashPanel extends JPanel implements Finishable {
                     label.setForeground(new Color(amp*4+10, amp*4+10, amp*4+10));
                 }
                 Thread.sleep(1000);
-                finish();
+                if (!finished) {
+                    finish();
+                }
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
             }
@@ -109,6 +113,7 @@ public class SplashPanel extends JPanel implements Finishable {
 
     @Override
     public void finish() {
+        finished = true;
         action.finish();
     }
 }

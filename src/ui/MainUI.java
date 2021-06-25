@@ -1,34 +1,26 @@
 package ui;
 
 import model.Difficulty;
+import ui.custom.ChoiceButton;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
 
 public class MainUI extends JFrame {
 
     // The default dark color used for e.g. on the form's background
-    private Color defaultColor;
+    public Color defaultColor;
     // Default button bg color
-    private Color buttonBackground;
+    public Color buttonBackground;
     // Hover bg color for a button
-    private Color buttonHoverBackground;
+    public Color buttonHoverBackground;
     // Hover fg color for a button
-    private Color buttonHoverForeground;
-
-    // A list of all the difficulties
-    private List<Difficulty> difficultyList;
-    // An index to keep track of the selected difficulty
-    int selectedDifficultyIndex;
+    public Color buttonHoverForeground;
 
     //============= UI Purpose Elements =============
-    // A UI element for the difficulty label
-    JLabel difficultyLabel;
     // The main panel
     JPanel contentPane;
     // Cards layout so the UI can switch between pages
@@ -47,6 +39,15 @@ public class MainUI extends JFrame {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
+                for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels()) {
+                    if ("Nimbus".equals(laf.getName())) {
+                        UIManager.setLookAndFeel(laf.getClassName());
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
                 MainUI mainFrame = new MainUI();
                 mainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 mainFrame.setTitle("Dungeon Sweeper");
@@ -62,7 +63,7 @@ public class MainUI extends JFrame {
                 mainFrame.setUndecorated(true);
                 mainFrame.showOnScreen(0);
                 mainFrame.setVisible(true);
-                Utils.getInstance().playSoundOnLoop("music");
+                Utils.getInstance().playMusic("music2");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -76,7 +77,6 @@ public class MainUI extends JFrame {
         //======== splash ========
         SplashPanel splash = new SplashPanel();
         splash.addFinishAction(() -> {
-            //System.out.println("SPLASH DONE");
             isSplashScreenDone = true;
             selectPage("mainPanel");
         });
@@ -85,6 +85,7 @@ public class MainUI extends JFrame {
         pages = new CardLayout(0, 0);
         contentPane.setLayout(pages);
         contentPane.add(splash, "splashPane");
+        contentPane.add(new SettingsUI(this), "settingsPanel");
         setContentPane(contentPane);
 
         // Swing worker to load the rest in the background while the splash screen is playing
@@ -96,7 +97,6 @@ public class MainUI extends JFrame {
             }
             @Override
             protected void done() {
-                //System.out.println("WORKER DONE");
                 isSwingWorkerDone = true;
                 selectPage("mainPanel");
             }
@@ -108,18 +108,7 @@ public class MainUI extends JFrame {
      * A method to initialize the gui components and other elements
      */
     private void initComponents() {
-        /*try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
         //======= this =========
-        difficultyList = new LinkedList<>();
-        selectedDifficultyIndex = 0;
-        difficultyList.add(new Difficulty("Easy", 10, 9, 9,  5, 0));
-        difficultyList.add(new Difficulty("Normal", 30, 15, 10, 7, 0));
-        difficultyList.add(new Difficulty("Hard", 40, 21, 10, 10, 0));
-
         defaultColor = new Color(27, 27, 35);
         buttonBackground = new Color(82, 82, 82);
         buttonHoverBackground = new Color(60, 60, 60);
@@ -128,13 +117,29 @@ public class MainUI extends JFrame {
         //======== main page ========
         JPanel mainPanel = new JPanel();
         GridBagLayout gbl_contentPane = new GridBagLayout();
-        gbl_contentPane.columnWidths = new int[]{0, 0,261,0, 0};
-        gbl_contentPane.rowHeights = new int[]{60, 0, 0, 0, 0, 60};
-        gbl_contentPane.columnWeights = new double[]{0.7, 0.0,0.3,0.0, 0.7};
-        gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE, 0.0};
+        gbl_contentPane.columnWidths = new int[]{0, 0, 0};
+        gbl_contentPane.rowHeights = new int[]{60, 0, 0, 0, 0, 0, 60};
+        gbl_contentPane.columnWeights = new double[]{0.7, 0.3, 0.7};
+        gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE, 0.0};
         mainPanel.setLayout(gbl_contentPane);
         mainPanel.setBackground(defaultColor);
         contentPane.add(mainPanel, "mainPanel");
+
+        //---- difficultyChoiceButton ----
+        ChoiceButton<Difficulty> difficultyChoiceButton = new ChoiceButton<>();
+        difficultyChoiceButton.addChoice(new Difficulty("Easy", 10, 9, 9,  5, 0));
+        difficultyChoiceButton.addChoice(new Difficulty("Normal", 30, 15, 10, 7, 0));
+        difficultyChoiceButton.addChoice(new Difficulty("Hard", 40, 21, 10, 10, 0));
+        mainPanel.add(difficultyChoiceButton, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets(0, 0, 0, 0), 0, 0));
+        difficultyChoiceButton.selectChoiceByIndex(0);
+        difficultyChoiceButton.setOpaque(false);
+        formatElement(difficultyChoiceButton.getChoiceLabel(), buttonBackground);
+        formatElement(difficultyChoiceButton.getLeftArrowButton(), buttonBackground);
+        formatElement(difficultyChoiceButton.getRightArrowButton(), buttonBackground);
+        makeHoverable(difficultyChoiceButton.getLeftArrowButton(), buttonHoverBackground, buttonHoverForeground);
+        makeHoverable(difficultyChoiceButton.getRightArrowButton(), buttonHoverBackground, buttonHoverForeground);
 
         //---- playButton ----
         JButton playButton = new JButton("PLAY");
@@ -144,61 +149,38 @@ public class MainUI extends JFrame {
             if(gamePanel != null) {
                 contentPane.remove(gamePanel);
             }
-            gamePanel = new GameUI(this, difficultyList.get(selectedDifficultyIndex));
+            gamePanel = new GameUI(this, difficultyChoiceButton.getSelectedChoice());
             contentPane.add(gamePanel, "gamePanel");
             selectPage("gamePanel");
         });
-        mainPanel.add(playButton, new GridBagConstraints(1, 1, 3, 1, 0.0, 0.0,
+        mainPanel.add(playButton, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets(40, 0, 20, 0), 0, 0));
         makeHoverable(playButton, buttonHoverBackground, buttonHoverForeground);
-
-        //---- leftArrow ----
-        JButton leftArrow = new JButton("◀");
-        formatElement(leftArrow, buttonBackground);
-        leftArrow.addActionListener(e -> {
-            Utils.getInstance().playSound("click");
-            selectedDifficultyByIndex(((--selectedDifficultyIndex) >= 0) ? selectedDifficultyIndex : difficultyList.size() - 1);
-        });
-        mainPanel.add(leftArrow, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                new Insets(20, 0, 20, 0), 0, 0));
-        makeHoverable(leftArrow, buttonHoverBackground, buttonHoverForeground);
-
-        //---- difficultyLabel ----
-        difficultyLabel = new JLabel("EASY");
-        formatElement(difficultyLabel, buttonBackground);
-        difficultyLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        mainPanel.add(difficultyLabel, new GridBagConstraints(2, 2, 1, 1, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                new Insets(20, 0, 20, 0), 0, 0));
-
-        //---- rightArrow ----
-        JButton rightArrow = new JButton("▶");
-        formatElement(rightArrow, buttonBackground);
-        rightArrow.addActionListener(e -> {
-            Utils.getInstance().playSound("click");
-            selectedDifficultyByIndex((++selectedDifficultyIndex < difficultyList.size()) ? selectedDifficultyIndex : 0);
-        });
-        mainPanel.add(rightArrow, new GridBagConstraints(3, 2, 1, 1, 0.0, 0.0,
-                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-                new Insets(20, 0, 20, 0), 0, 0));
-        makeHoverable(rightArrow, buttonHoverBackground, buttonHoverForeground);
 
         //---- creditsButton ----
         JButton creditsButton = new JButton("CREDITS");
         formatElement(creditsButton, buttonBackground);
         creditsButton.addActionListener(e -> showOnScreen(1));
-        mainPanel.add(creditsButton, new GridBagConstraints(1, 3, 3, 1, 0.0, 0.0,
+        mainPanel.add(creditsButton, new GridBagConstraints(1, 3, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));
         makeHoverable(creditsButton, buttonHoverBackground, buttonHoverForeground);
+
+        //---- settingsButton ----
+        JButton settingsButton = new JButton("SETTINGS");
+        formatElement(settingsButton, buttonBackground);
+        settingsButton.addActionListener(e -> selectPage("settingsPanel"));
+        mainPanel.add(settingsButton, new GridBagConstraints(1, 4, 1, 1, 0.0, 0.0,
+                GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
+                new Insets(20, 0, 20, 0), 0, 0));
+        makeHoverable(settingsButton, buttonHoverBackground, buttonHoverForeground);
 
         //---- exitButton ----
         JButton exitButton = new JButton("EXIT");
         formatElement(exitButton, new Color(183, 0, 0));
         exitButton.addActionListener(e -> this.dispose());
-        mainPanel.add(exitButton, new GridBagConstraints(1, 4, 3, 1, 0.0, 0.0,
+        mainPanel.add(exitButton, new GridBagConstraints(1, 5, 1, 1, 0.0, 0.0,
                 GridBagConstraints.SOUTH, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));
         makeHoverable(exitButton, new Color(140, 0, 0), buttonHoverForeground);
@@ -210,7 +192,7 @@ public class MainUI extends JFrame {
      */
     public void selectPage(String page) {
         switch (page) {
-            case "mainPanel", "gamePanel" -> {
+            case "mainPanel", "gamePanel", "settingsPanel" -> {
                 if(isSplashScreenDone && isSwingWorkerDone) {
                     pages.show(contentPane, page);
                 }
@@ -218,15 +200,6 @@ public class MainUI extends JFrame {
             case "splashPanel" -> pages.show(contentPane, page);
             default -> throw new IllegalStateException("Unexpected page: " + page);
         }
-    }
-
-    /**
-     * A method to set the selected difficulty in the UI label
-     * @param index the index of the difficulty
-     */
-    private void selectedDifficultyByIndex(int index) {
-        selectedDifficultyIndex = index;
-        difficultyLabel.setText(difficultyList.get(index).getName().toUpperCase());
     }
 
     /**
@@ -243,7 +216,7 @@ public class MainUI extends JFrame {
         element.setBackground(color);
     }
 
-    /**
+    /** TODO remake
      * A method to make a JButton hoverable
      * @param element the button
      * @param backgroundColor the hover bg color

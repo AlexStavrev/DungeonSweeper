@@ -10,12 +10,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ba2c3fc0-9b2b-4a40-a945-1bb0406f9829" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/DungeonSweeper_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DungeonSweeper.iml" beforeDir="false" afterPath="$PROJECT_DIR$/DungeonSweeper.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/DungeonSweeper/ui/audio/music.wav" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/DungeonSweeper/ui/audio/music.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controller/GameController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/GameController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Difficulty.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Difficulty.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/GameUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/GameUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/MainUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/MainUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/SplashPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/SplashPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ui/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/Utils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ui/audio/music.wav" beforeDir="false" afterPath="$PROJECT_DIR$/src/ui/audio/music.wav" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +65,11 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="reference.settings.ide.settings.uml" />
   </component>
+  <component name="RecentsManager">
+    <key name="ExtractSuperBase.RECENT_KEYS">
+      <recent name="ui.custom" />
+    </key>
+  </component>
   <component name="RunManager" selected="Application.MainUI">
     <configuration name="GameForm" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ui.GameForm" />
@@ -85,6 +93,17 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -119,7 +138,11 @@
       <workItem from="1624279448503" duration="1330000" />
       <workItem from="1624289837458" duration="7680000" />
       <workItem from="1624313112298" duration="1608000" />
-      <workItem from="1624368930237" duration="1473000" />
+      <workItem from="1624368930237" duration="4639000" />
+      <workItem from="1624466358440" duration="4953000" />
+      <workItem from="1624528769014" duration="3912000" />
+      <workItem from="1624543249973" duration="5087000" />
+      <workItem from="1624577422373" duration="7361000" />
     </task>
     <servers />
   </component>

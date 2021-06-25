@@ -56,7 +56,7 @@ public class GameController {
         if (game.getGrid().getCellAt(x, y).getValue() == Value.BOMB) {
             game.setState(GameState.LOST);
         } else {
-            addScore(Math.abs(100-amountOfTilesLeft)+Math.round(getTotalSeconds()/2));
+            addScore(Math.abs(100-amountOfTilesLeft)+Math.round(getTotalSeconds()/2F));
             cellController.revealCell(game.getGrid().getCellAt(x, y));
             if(--amountOfTilesLeft == 0) {
                 game.setState(GameState.WON);

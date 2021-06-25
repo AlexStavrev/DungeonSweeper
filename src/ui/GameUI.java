@@ -12,7 +12,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 
 public class GameUI extends JPanel {
 
@@ -134,7 +133,7 @@ public class GameUI extends JPanel {
 
         SwingWorker loadBoard = new SwingWorker() {
             @Override
-            protected Object doInBackground() throws Exception {
+            protected Object doInBackground() {
                 for (int y = 0; y < difficulty.getRows(); y++) {
                     for (int x = 0; x < difficulty.getColumns(); x++) {
                         Cell cell = grid.getCellAt(x, y);
