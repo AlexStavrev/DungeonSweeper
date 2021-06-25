@@ -152,7 +152,7 @@ public class ChoiceButton<T> extends JPanel {
 
     /**
      * An internal setter for the selected index
-     * @param index
+     * @param index selected index
      */
     private void setSelectedChoiceIndex(int index) {
         this.selectedChoiceIndex = index;

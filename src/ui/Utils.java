@@ -65,6 +65,9 @@ public class Utils {
                 InputStream bufferedIn = new BufferedInputStream(audioSrc);
                 AudioInputStream sound = AudioSystem.getAudioInputStream(bufferedIn)
             ){
+                if (musicClip != null) {
+                    musicClip.stop();
+                }
                 DataLine.Info info = new DataLine.Info (Clip.class, sound.getFormat());
                 musicClip = (Clip)AudioSystem.getLine(info);
                 musicClip.open(sound);
@@ -111,10 +114,7 @@ public class Utils {
      */
     public void setUIScale(int scale) {
         TILE_SIZE = scale;
-        for (String iconName: icons.keySet()) {
-            ImageIcon icon = icons.get(iconName);
-            icons.replace(iconName, resizedImage(icon, TILE_SIZE, TILE_SIZE));
-        }
+        loadImages();
     }
 
     /**
@@ -167,38 +167,38 @@ public class Utils {
      * @return icon
      */
     public ImageIcon getIconForValue(Value value) {
-        switch(value.getValue()) {
-            case -1:
-                return getRandomEnemyIcon();
-            case 0:
-                return getImage("revealed");
-            case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8:
-                return getImage(String.valueOf(value.getValue()));
-            default:
-                //TODO no such value exception
-        }
-        return null;
+        return switch (value.getValue()) {
+            case -1 -> getRandomEnemyIcon();
+            case 0 -> getImage("revealed");
+            case 1, 2, 3, 4, 5, 6, 7, 8 -> getImage(String.valueOf(value.getValue()));
+            default -> throw new IllegalArgumentException("Couldn't find a case for " + value.getValue());
+        };
     }
 
     private void loadImages() {
-        try(final InputStream input = getClass().getResourceAsStream("images/");
-            final InputStreamReader inputReader = new InputStreamReader(input);
-            final BufferedReader bufferedReader = new BufferedReader(inputReader)) {
-            bufferedReader.lines().forEach(nextFile -> {
-                ImageIcon icon = new ImageIcon(getClass().getResource(String.format("images/%s", nextFile)));
-                icons.put(nextFile.replaceFirst("[.][^.]+$", ""), resizedImage(icon, TILE_SIZE, TILE_SIZE));
-            });
-        } catch (IOException e) {
+        try { //temp try
+            icons.clear();
+            try(final InputStream input = getClass().getResourceAsStream("/ui/images/");
+                final InputStreamReader inputReader = new InputStreamReader(input);
+                final BufferedReader bufferedReader = new BufferedReader(inputReader)) {
+                bufferedReader.lines().forEach(nextFile -> {
+                    ImageIcon icon = new ImageIcon(getClass().getResource(String.format("images/%s", nextFile)));
+                    icons.put(nextFile.replaceFirst("[.][^.]+$", ""), resizedImage(icon, TILE_SIZE, TILE_SIZE));
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) { //temp
             e.printStackTrace();
         }
     }
 
-
     public void setMusicVolume(int volume) {
         if (volume < 0 || volume > 100)
             throw new IllegalArgumentException("Volume not valid: " + volume);
+        this.musicVolume = volume;
         FloatControl gainControl = (FloatControl) musicClip.getControl(FloatControl.Type.MASTER_GAIN);
-        gainControl.setValue(20f * (float)Math.log10(volume/100f));
+        gainControl.setValue(20f * (float)Math.log10(musicVolume/100f));
     }
 
     public void setEffectsVolume(int volume) {

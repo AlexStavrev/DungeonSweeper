@@ -63,7 +63,7 @@ public class MainUI extends JFrame {
                 mainFrame.setUndecorated(true);
                 mainFrame.showOnScreen(0);
                 mainFrame.setVisible(true);
-                Utils.getInstance().playMusic("music2");
+                Utils.getInstance().playMusic("music");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -258,7 +258,7 @@ public class MainUI extends JFrame {
      * A function to show the application on a specific screen
      * @param screen screen's id
      */
-    private void showOnScreen(int screen) {
+    public void showOnScreen(int screen) {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice[] gs = ge.getScreenDevices();
         Rectangle screenBounds;

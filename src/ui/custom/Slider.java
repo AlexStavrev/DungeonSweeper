@@ -60,7 +60,6 @@ public class Slider extends JSlider {
                 return xPosition;
             }
         });
-
         putClientProperty("Nimbus.Overrides", newDefault);
     }
 
