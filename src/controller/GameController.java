@@ -52,11 +52,13 @@ public class GameController {
      * @param x the x-coord of the cell
      * @param y the y-coord of the cell
      */
-    public void revealCellAt(int x, int y) { //TODO change score formula
-        if (game.getGrid().getCellAt(x, y).getValue() == Value.BOMB) {
+    public void revealCellAt(int x, int y) {
+        if (game.getGrid().getCellAt(x, y).getValue().isABomb()) {
             game.setState(GameState.LOST);
-        } else {
-            addScore(Math.abs(100-amountOfTilesLeft)+Math.round(getTotalSeconds()/2F));
+        } else { addScore(Math.round((
+                (game.getGrid().getCellAt(x, y).getValue().getValue() * 100)
+                + getTotalSeconds()/100f)
+                * game.getDifficulty().getScoreMultiplier()));
             cellController.revealCell(game.getGrid().getCellAt(x, y));
             if(--amountOfTilesLeft == 0) {
                 game.setState(GameState.WON);

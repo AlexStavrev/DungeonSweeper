@@ -20,7 +20,12 @@ public class MainUI extends JFrame {
     // Hover fg color for a button
     public Color buttonHoverForeground;
 
+    // boolean to check if there is a paused game
+    boolean gameIsPaused;
+
     //============= UI Purpose Elements =============
+    // The play button
+    JButton playButton;
     // The main panel
     JPanel contentPane;
     // Cards layout so the UI can switch between pages
@@ -127,9 +132,9 @@ public class MainUI extends JFrame {
 
         //---- difficultyChoiceButton ----
         ChoiceButton<Difficulty> difficultyChoiceButton = new ChoiceButton<>();
-        difficultyChoiceButton.addChoice(new Difficulty("Easy", 10, 9, 9,  5, 0));
-        difficultyChoiceButton.addChoice(new Difficulty("Normal", 30, 15, 10, 7, 0));
-        difficultyChoiceButton.addChoice(new Difficulty("Hard", 40, 21, 10, 10, 0));
+        difficultyChoiceButton.addChoice(new Difficulty("Easy", 10, 9, 9,  5, 0, 1f));
+        difficultyChoiceButton.addChoice(new Difficulty("Normal", 30, 15, 10, 7, 0, 1.1f));
+        difficultyChoiceButton.addChoice(new Difficulty("Hard", 40, 21, 10, 10, 0, 1.2f));
         mainPanel.add(difficultyChoiceButton, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
                 new Insets(0, 0, 0, 0), 0, 0));
@@ -142,15 +147,21 @@ public class MainUI extends JFrame {
         makeHoverable(difficultyChoiceButton.getRightArrowButton(), buttonHoverBackground, buttonHoverForeground);
 
         //---- playButton ----
-        JButton playButton = new JButton("PLAY");
+        playButton = new JButton("PLAY");
         formatElement(playButton, buttonBackground);
         playButton.addActionListener(e -> {
             Utils.getInstance().playSound("click");
-            if(gamePanel != null) {
-                contentPane.remove(gamePanel);
+            if(gameIsPaused) {
+                playButton.setText("PLAY");
+                gamePanel.startTimer();
+                gameIsPaused = false;
+            } else {
+                if (gamePanel != null) {
+                    contentPane.remove(gamePanel);
+                }
+                gamePanel = new GameUI(this, difficultyChoiceButton.getSelectedChoice());
+                contentPane.add(gamePanel, "gamePanel");
             }
-            gamePanel = new GameUI(this, difficultyChoiceButton.getSelectedChoice());
-            contentPane.add(gamePanel, "gamePanel");
             selectPage("gamePanel");
         });
         mainPanel.add(playButton, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
@@ -184,6 +195,14 @@ public class MainUI extends JFrame {
                 GridBagConstraints.SOUTH, GridBagConstraints.HORIZONTAL,
                 new Insets(20, 0, 20, 0), 0, 0));
         makeHoverable(exitButton, new Color(140, 0, 0), buttonHoverForeground);
+    }
+
+    /**
+     * A method to set the menu to continue if game is paused
+     */
+    public void pauseGame() {
+        gameIsPaused = true;
+        playButton.setText("CONTINUE");
     }
 
     /**

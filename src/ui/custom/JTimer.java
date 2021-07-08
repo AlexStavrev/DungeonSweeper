@@ -40,16 +40,18 @@ public class JTimer extends JLabel implements JTimerIF {
      */
     @Override
     public void startTimer() {
-        active = true;
+        resume();
         timerThread = new Thread(() -> {
-            while (minutes >= 0 && active) {
+            while (minutes >= 0) {
                 try {
-                    setText(((minutes < 10) ? "0" + minutes : minutes) + ":" + ((seconds < 10) ? "0" + seconds : seconds));
-                    Thread.sleep(1000L);
-                    if (--seconds < 0) {
-                        seconds = 59;
-                        minutes--;
+                    if(active) {
+                        setText(((minutes < 10) ? "0" + minutes : minutes) + ":" + ((seconds < 10) ? "0" + seconds : seconds));
+                        if (--seconds < 0) {
+                            seconds = 59;
+                            minutes--;
+                        }
                     }
+                    Thread.sleep(1000L);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -76,7 +78,7 @@ public class JTimer extends JLabel implements JTimerIF {
      */
     @Override
     public void resume() {
-        startTimer();
+        active = true;
     }
 
     /**

@@ -27,4 +27,8 @@ public interface DifficultyModel {
     // Get or set the amount of rows
     void setSeconds(int seconds);
     int getSeconds();
+
+    // Get or set the score multiplier
+    void setScoreMultiplier(float soreMultiplier);
+    float getScoreMultiplier();
 }

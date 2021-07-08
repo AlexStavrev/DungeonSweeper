@@ -99,12 +99,21 @@ public class GameUI extends JPanel {
         pauseButton.setFont(new Font("Arial",Font.BOLD, 20));
         pauseButton.setOpaque(true);
         pauseButton.addActionListener(e -> {
+            if(gameController.getGame().getState() == GameState.IN_GAME) {
+                parent.pauseGame();
+            }
             timer.pause();
             parent.selectPage("mainPanel");
         });
         add(pauseButton, new GridBagConstraints(4, 0, 1, 2, 0.0, 0.0,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                 new Insets(10, 10, 10, 10), 0, 0));
+    }
+
+    public void startTimer() {
+        if(!timer.isActive()) {
+            timer.resume();
+        }
     }
 
     private void initGameBoard() {

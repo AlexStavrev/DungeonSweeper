@@ -17,20 +17,26 @@ public class Difficulty implements DifficultyModel {
     private int minutes;
     // The amount of seconds
     private int seconds;
+    // The score multiplier
+    private float scoreMultiplier;
 
     /**
      * A standard constructor for the class
      * @param amountOfMines the amount of mines
      * @param columns the amount of columns
      * @param rows the amount of rows
+     * @param minutes minutes in the game
+     * @param seconds seconds in the game, excluding minutes (0-60)
+     * @param scoreMultiplier the score multiplier
      */
-    public Difficulty(String name, int amountOfMines, int columns, int rows, int minutes, int seconds) {
+    public Difficulty(String name, int amountOfMines, int columns, int rows, int minutes, int seconds, float scoreMultiplier) {
         setName(name);
         setAmountOfMines(amountOfMines);
         setColumns(columns);
         setRows(rows);
         setMinutes(minutes);
         setSeconds(seconds);
+        setScoreMultiplier(scoreMultiplier);
     }
 
     //Interface methods
@@ -92,6 +98,16 @@ public class Difficulty implements DifficultyModel {
     @Override
     public int getSeconds() {
         return seconds;
+    }
+
+    @Override
+    public float getScoreMultiplier() {
+        return scoreMultiplier;
+    }
+
+    @Override
+    public void setScoreMultiplier(float scoreMultiplier) {
+        this.scoreMultiplier = scoreMultiplier;
     }
 
     @Override

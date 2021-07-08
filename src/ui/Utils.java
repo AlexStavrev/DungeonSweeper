@@ -175,20 +175,44 @@ public class Utils {
         };
     }
 
+    /*private void loadImages() {
+        icons.clear();
+        try(final InputStream input = getClass().getResourceAsStream("/ui/images/");
+            final InputStreamReader inputReader = new InputStreamReader(input);
+            final BufferedReader bufferedReader = new BufferedReader(inputReader)) {
+            bufferedReader.lines().forEach(System.out::println);
+            bufferedReader.lines().forEach(nextFile -> {
+                ImageIcon icon = new ImageIcon(getClass().getResource(String.format("images/%s", nextFile)));
+                icons.put(nextFile.replaceFirst("[.][^.]+$", ""), resizedImage(icon, TILE_SIZE, TILE_SIZE));
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
+
+    /**
+     * Stupid way of loading the images because the one above only works in compiler
+     * Please don't do anything like this!
+     */
     private void loadImages() {
-        try { //temp try
-            icons.clear();
-            try(final InputStream input = getClass().getResourceAsStream("/ui/images/");
-                final InputStreamReader inputReader = new InputStreamReader(input);
-                final BufferedReader bufferedReader = new BufferedReader(inputReader)) {
-                bufferedReader.lines().forEach(nextFile -> {
-                    ImageIcon icon = new ImageIcon(getClass().getResource(String.format("images/%s", nextFile)));
-                    icons.put(nextFile.replaceFirst("[.][^.]+$", ""), resizedImage(icon, TILE_SIZE, TILE_SIZE));
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (Exception e) { //temp
+        icons.clear();
+        try {
+            String[] iconNames = {"1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg", "8.jpg",
+                    "alive.jpg", "dead.jpg", "won.jpg", "icon.png", "revealed.jpg",
+                    "coins (1).jpg", "coins (2).jpg",
+                    "dead_enemy (1).jpg", "dead_enemy (2).jpg", "dead_enemy (3).jpg", "dead_enemy (4).jpg",
+                    "enemy (1).jpg", "enemy (2).jpg", "enemy (3).jpg", "enemy (4).jpg",
+                    "flags (1).jpg", "flags (10).jpg", "flags (11).jpg", "flags (12).jpg", "flags (13).jpg", "flags (14).jpg", "flags (15).jpg",
+                    "flags (16).jpg", "flags (2).jpg", "flags (3).jpg", "flags (4).jpg", "flags (5).jpg", "flags (6).jpg", "flags (7).jpg",
+                    "flags (8).jpg", "flags (9).jpg",
+                    "tiles (1).jpg", "tiles (10).jpg", "tiles (11).jpg", "tiles (12).jpg", "tiles (13).jpg", "tiles (14).jpg", "tiles (15).jpg",
+                    "tiles (16).jpg", "tiles (2).jpg", "tiles (3).jpg", "tiles (4).jpg", "tiles (5).jpg", "tiles (6).jpg", "tiles (7).jpg",
+                    "tiles (8).jpg", "tiles (9).jpg"};
+            Arrays.stream(iconNames).forEach(nextFile -> {
+                ImageIcon icon = new ImageIcon(getClass().getResource(String.format("images/%s", nextFile)));
+                icons.put(nextFile.replaceFirst("[.][^.]+$", ""), resizedImage(icon, TILE_SIZE, TILE_SIZE));
+            });
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
